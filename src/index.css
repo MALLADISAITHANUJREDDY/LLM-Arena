@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cyber-bg: #05070f;
+  --color-cyber-bg-darker: #020306;
+  --color-cyber-card: rgba(10, 15, 30, 0.7);
+  --color-cyber-red: #ff0055;
+  --color-cyber-red-dim: rgba(255, 0, 85, 0.15);
+  --color-cyber-blue: #00f0ff;
+  --color-cyber-blue-dim: rgba(0, 240, 255, 0.15);
+  --color-cyber-yellow: #ffe600;
+  
+  --font-cyber: "Outfit", sans-serif;
+  --font-mono-cyber: "Share Tech Mono", monospace;
+}
+
+@utility text-glow-red {
+  text-shadow: 0 0 8px rgba(255, 0, 85, 0.6), 0 0 2px rgba(255, 0, 85, 0.3);
+}
+@utility text-glow-blue {
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6), 0 0 2px rgba(0, 240, 255, 0.3);
+}
+@utility text-glow-yellow {
+  text-shadow: 0 0 8px rgba(255, 230, 0, 0.6), 0 0 2px rgba(255, 230, 0, 0.3);
+}
+
+@utility border-glow-red {
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.3), inset 0 0 10px rgba(255, 0, 85, 0.1);
+}
+@utility border-glow-blue {
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+@utility glow-red {
+  box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+}
+@utility glow-blue {
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+}
+
+body {
+  font-family: var(--font-cyber);
+  background-color: var(--color-cyber-bg);
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(13, 20, 48, 0.6) 0%, transparent 60%),
+    linear-gradient(rgba(18, 24, 48, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 24, 48, 0.07) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  background-attachment: fixed;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+/* Custom Cyberpunk Angled Corner Box */
+.cyber-panel-red {
+  position: relative;
+  background: rgba(8, 10, 20, 0.85);
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.05), inset 0 0 15px rgba(255, 0, 85, 0.02);
+}
+
+.cyber-panel-red::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  background: var(--color-cyber-red);
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  opacity: 0.8;
+}
+
+.cyber-panel-blue {
+  position: relative;
+  background: rgba(8, 10, 20, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.05), inset 0 0 15px rgba(0, 240, 255, 0.02);
+}
+
+.cyber-panel-blue::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  background: var(--color-cyber-blue);
+  clip-path: polygon(100% 100%, 0 100%, 100% 0);
+  opacity: 0.8;
+}
+
+.cyber-grid {
+  position: relative;
+}
+
+.cyber-grid::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 999;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* CRT flickering scanlines */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.scanline-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0) 50%,
+    rgba(0, 240, 255, 0.04) 50%,
+    rgba(0, 240, 255, 0.04)
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  animation: scanline 20s linear infinite;
+}
+
+/* Custom Scrollbar for Terminals */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 15, 30, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
