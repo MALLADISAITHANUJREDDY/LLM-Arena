@@ -29,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="absolute inset-0 bg-cyber-blue/10 blur-sm rounded" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue via-white to-cyber-red font-mono-cyber">
+          <h1 className="text-3xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue via-white to-cyber-red font-mono-cyber">
             LLM // ARENA
           </h1>
           <p className="text-xs text-slate-500 font-mono-cyber uppercase flex items-center gap-1.5">

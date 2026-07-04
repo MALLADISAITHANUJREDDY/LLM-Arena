@@ -15,7 +15,8 @@ import {
   Percent,
   TrendingUp,
   ShieldX,
-  FileText
+  FileText,
+  Zap
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { TeamPanel } from './components/TeamPanel';
@@ -1401,7 +1402,40 @@ function App() {
     { type: 'Vector Audit', message: 'Vector auditor detected poisoned weights, performing distance reset', details: 'Realigned embedding distance threshold to safe limit.' },
   ];
 
-  const sysBootLogs = [
+    const testimonials = [
+      {
+        name: 'Sarah Jenkins',
+        role: 'Lead AI Security Lead @ CyberGuard',
+        text: 'The Web Audio effects and visual fire bomb animations make real-time debugging of adversarial prompt vectors highly intuitive. Outstanding compliance reporting!'
+      },
+      {
+        name: 'Dr. Alexei Vlasov',
+        role: 'Senior Research Fellow @ AI Safe',
+        text: 'Finally, a real-time LLM sandbox that models injection and jailbreak exposures instantly. The PDF report exports are incredibly detailed.'
+      },
+      {
+        name: 'Marcus Chen',
+        role: 'Principal Engineer @ PromptShield',
+        text: 'Perfect mobile layouts and fluid bottom navigation. This dashboard has drastically accelerated our security profiling cycles.'
+      },
+      {
+        name: 'Elena Rostova',
+        role: 'DevSecOps Lead @ NeuralNode',
+        text: 'The dynamic API-key sanitizers and instant threat alerts are exactly what enterprise security monitors need. Highly recommended!'
+      },
+      {
+        name: 'David Kim',
+        role: 'Security Architect @ Nexus AI',
+        text: 'Stunning glassmorphic aesthetics and synth rumbles. The infinite timeline logging has changed how we benchmark guardrails.'
+      },
+      {
+        name: 'Aisha Bello',
+        role: 'Chief Architect @ CoreDefend',
+        text: 'The staggered fire explosion blasts and visual shield ripples make the combat simulation feel incredibly engaging.'
+      }
+    ];
+
+    const sysBootLogs = [
     { id: 'boot-1', timestamp: getTimestamp(), sender: 'system' as const, category: 'SYSTEM', message: 'Initializing virtual LLM Sandbox environment...' },
     { id: 'boot-2', timestamp: getTimestamp(), sender: 'system' as const, category: 'SYSTEM', message: 'Deploying Sentinel firewall nodes and Guardrail monitors.' },
     { id: 'boot-3', timestamp: getTimestamp(), sender: 'system' as const, category: 'SYSTEM', message: 'Establishing connection to Adversary model node #008A.' },
@@ -1610,6 +1644,78 @@ function App() {
           
             {activeView === 'dashboard' && (
               <>
+                {/* Core Concept Idea & Small Statement */}
+                <div className="relative group overflow-hidden bg-slate-950/90 backdrop-blur-md border border-slate-800 rounded-lg p-6 pl-8.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl transition-all hover:border-slate-750">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyber-red to-cyber-blue" />
+                  <div className="space-y-2 md:max-w-[78%]">
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="px-2 py-0.5 rounded-[2px] bg-cyber-blue/15 border border-cyber-blue/40 text-[9px] text-cyber-blue font-bold tracking-widest uppercase text-glow-blue animate-pulse">
+                        CORE CONCEPT
+                      </span>
+                      <h3 className="text-base sm:text-lg font-black text-white uppercase tracking-wider font-mono-cyber">
+                        Adversarial LLM Arena Firewall Benchmarking
+                      </h3>
+                    </div>
+                    <p className="text-sm leading-relaxed text-slate-200 font-cyber font-medium tracking-wide">
+                      The Adversarial LLM Arena is a next-generation security sandbox designed to test and benchmark model resilience against malicious actors. By simulating real-time offensive injection sequences, complex roleplay jailbreaks, and token exfiltration parameters, security teams can proactively audit firewall rules and guardrails. Build and test defensive architectures to anonymize PII data leakage, prevent factual hallucinations, and compile standard-compliant compliance reports instantly.
+                    </p>
+
+                    {/* Integrated Foundation LLM Providers */}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-900 pt-3 mt-3 w-full">
+                      <span className="text-[9px] text-slate-500 font-mono-cyber uppercase font-bold tracking-widest block">
+                        INTEGRATED LLM VENDORS:
+                      </span>
+                      <div className="flex flex-wrap items-center gap-4 text-[10px] font-mono-cyber uppercase font-black">
+                        {/* OpenAI */}
+                        <div className="flex items-center gap-1.5 text-emerald-400 opacity-80 hover:opacity-100 transition-opacity select-none">
+                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-3 18c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-6-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-3-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5z" />
+                          </svg>
+                          OpenAI
+                        </div>
+                        {/* Google Gemini */}
+                        <div className="flex items-center gap-1.5 text-cyan-400 opacity-80 hover:opacity-100 transition-opacity select-none">
+                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 0L14 8L22 10L14 12L12 20L10 12L2 10L10 8L12 0Z" />
+                          </svg>
+                          Google
+                        </div>
+                        {/* Anthropic */}
+                        <div className="flex items-center gap-1.5 text-amber-500 opacity-80 hover:opacity-100 transition-opacity select-none">
+                          <span className="w-3.5 h-3.5 rounded-full border border-amber-500 flex items-center justify-center text-[7.5px] font-black leading-none tracking-tighter">A</span>
+                          Anthropic
+                        </div>
+                        {/* Meta LLaMA */}
+                        <div className="flex items-center gap-1.5 text-blue-500 opacity-80 hover:opacity-100 transition-opacity select-none">
+                          <span className="text-[12px] leading-none font-bold">∞</span>
+                          Meta
+                        </div>
+                        {/* Mistral AI */}
+                        <div className="flex items-center gap-1.5 text-orange-500 opacity-80 hover:opacity-100 transition-opacity select-none">
+                          <span className="w-2.5 h-2.5 bg-orange-500 rounded-[2px]" />
+                          Mistral AI
+                        </div>
+                        {/* Microsoft */}
+                        <div className="flex items-center gap-1.5 text-slate-200 opacity-80 hover:opacity-100 transition-opacity select-none">
+                          <div className="grid grid-cols-2 gap-0.5 w-3 h-3">
+                            <div className="bg-red-500 w-1.2 h-1.2" />
+                            <div className="bg-green-500 w-1.2 h-1.2" />
+                            <div className="bg-blue-500 w-1.2 h-1.2" />
+                            <div className="bg-yellow-500 w-1.2 h-1.2" />
+                          </div>
+                          Microsoft
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-row md:flex-col text-xs font-mono-cyber uppercase gap-x-5 gap-y-2 shrink-0 text-slate-400 border-t md:border-t-0 md:border-l border-slate-850 pt-3 md:pt-0 md:pl-6 w-full md:w-auto">
+                    <div>Status: <span className="text-emerald-500 font-bold text-glow-blue">READY</span></div>
+                    <div>Nodes Deployed: <span className="text-cyber-blue font-bold">2 / 2 Active</span></div>
+                    <div>Sanitizer Engine: <span className="text-white font-bold">Sentinel v1.4</span></div>
+                    <div>Telemetry Trace: <span className="text-cyber-red font-bold">ACTIVE</span></div>
+                  </div>
+                </div>
+
                 {/* Upper Grid Layout: Red Team, Arena, Blue Team, Right Live Battle Log */}
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6 items-stretch">
                   
@@ -1738,7 +1844,249 @@ function App() {
             {activeView === 'analytics' && <AnalyticsView queriesCount={queriesCount} blockedCount={blockedCount} />}
             {activeView === 'settings' && <SettingsView />}
 
-        </main>
+            {/* Horizontal Scrolling Logo Wall (Logo Marquee) */}
+            <div className="relative overflow-hidden w-full border-t border-slate-900 pt-6 mt-6">
+              <div className="flex items-center justify-between mb-3 px-1 font-mono-cyber">
+                <span className="text-[10px] text-slate-400 uppercase font-extrabold tracking-widest flex items-center gap-1.5 shrink-0 select-none">
+                  <Cpu className="w-3.5 h-3.5 text-cyber-blue animate-pulse" /> COMPATIBLE MODEL ARCHITECTURES:
+                </span>
+                <span className="text-[9px] text-slate-600 uppercase">
+                  ACTIVE DEPLOYMENTS
+                </span>
+              </div>
+
+              {/* Scrolling track wrapper */}
+              <div className="relative w-full overflow-hidden bg-slate-950/20 border-y border-slate-900/60 py-4.5 flex">
+                <div className="animate-marquee gap-16 flex shrink-0 items-center font-mono-cyber uppercase font-black text-sm sm:text-base select-none">
+                  {/* 1st copy of logos */}
+                  <div className="flex items-center gap-16">
+                    {/* OpenAI */}
+                    <div className="flex items-center gap-2.5 text-emerald-400 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-3 18c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-6-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-3-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5z" />
+                      </svg>
+                      OpenAI
+                    </div>
+                    {/* Google Gemini */}
+                    <div className="flex items-center gap-2.5 text-cyan-400 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0L14.5 9L23.5 11.5L14.5 14L12 23L9.5 14L0.5 11.5L9.5 9L12 0Z" />
+                      </svg>
+                      Google
+                    </div>
+                    {/* Anthropic */}
+                    <div className="flex items-center gap-2.5 text-amber-500 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <span className="w-6 h-6 rounded-full border border-amber-500 flex items-center justify-center text-[11px] font-black leading-none tracking-tighter">A</span>
+                      Anthropic
+                    </div>
+                    {/* Meta LLaMA */}
+                    <div className="flex items-center gap-2.5 text-blue-500 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <span className="text-[20px] leading-none font-bold">∞</span>
+                      Meta
+                    </div>
+                    {/* Mistral AI */}
+                    <div className="flex items-center gap-2.5 text-orange-500 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <span className="w-4 h-4 bg-orange-500 rounded-[2px]" />
+                      Mistral AI
+                    </div>
+                    {/* Microsoft */}
+                    <div className="flex items-center gap-2.5 text-slate-200 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <div className="grid grid-cols-2 gap-0.5 w-4.5 h-4.5">
+                        <div className="bg-red-500 w-2 h-2" />
+                        <div className="bg-green-500 w-2 h-2" />
+                        <div className="bg-blue-500 w-2 h-2" />
+                        <div className="bg-yellow-500 w-2 h-2" />
+                      </div>
+                      Microsoft
+                    </div>
+                  </div>
+                  {/* 2nd copy of logos for seamless loop */}
+                  <div className="flex items-center gap-16">
+                    {/* OpenAI */}
+                    <div className="flex items-center gap-2.5 text-emerald-400 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-3 18c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-6-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-3-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5z" />
+                      </svg>
+                      OpenAI
+                    </div>
+                    {/* Google Gemini */}
+                    <div className="flex items-center gap-2.5 text-cyan-400 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 0L14.5 9L23.5 11.5L14.5 14L12 23L9.5 14L0.5 11.5L9.5 9L12 0Z" />
+                      </svg>
+                      Google
+                    </div>
+                    {/* Anthropic */}
+                    <div className="flex items-center gap-2.5 text-amber-500 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <span className="w-6 h-6 rounded-full border border-amber-500 flex items-center justify-center text-[11px] font-black leading-none tracking-tighter">A</span>
+                      Anthropic
+                    </div>
+                    {/* Meta LLaMA */}
+                    <div className="flex items-center gap-2.5 text-blue-500 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <span className="text-[20px] leading-none font-bold">∞</span>
+                      Meta
+                    </div>
+                    {/* Mistral AI */}
+                    <div className="flex items-center gap-2.5 text-orange-500 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <span className="w-4 h-4 bg-orange-500 rounded-[2px]" />
+                      Mistral AI
+                    </div>
+                    {/* Microsoft */}
+                    <div className="flex items-center gap-2.5 text-slate-200 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300">
+                      <div className="grid grid-cols-2 gap-0.5 w-4.5 h-4.5">
+                        <div className="bg-red-500 w-2 h-2" />
+                        <div className="bg-green-500 w-2 h-2" />
+                        <div className="bg-blue-500 w-2 h-2" />
+                        <div className="bg-yellow-500 w-2 h-2" />
+                      </div>
+                      Microsoft
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Appreciations / Client Reviews Infinite Scrolling Marquee */}
+            <div className="relative overflow-hidden w-full border-t border-slate-900 pt-6 mt-4">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-cyber-blue animate-pulse" />
+                  <h4 className="text-xs font-black uppercase text-slate-400 tracking-widest font-mono-cyber">
+                    TRUSTED BY AI SECURITY AUDITORS & RESEARCHERS
+                  </h4>
+                </div>
+                <span className="text-[9px] text-slate-600 font-mono-cyber uppercase">
+                  INFINITE TELEMETRY FEED
+                </span>
+              </div>
+
+              {/* Scrolling track wrapper */}
+              <div className="relative w-full overflow-hidden bg-slate-950/40 border-y border-slate-900 py-3.5 flex">
+                <div className="animate-marquee gap-4 flex shrink-0">
+                  {/* 1st copy of items */}
+                  {testimonials.map((t, idx) => (
+                    <div 
+                      key={`t1-${idx}`} 
+                      className="w-[290px] sm:w-[330px] bg-slate-900/50 backdrop-blur-md border border-slate-800/80 rounded p-4 pl-6 flex flex-col justify-between gap-2.5 shrink-0 hover:border-slate-700/80 hover:bg-slate-900/80 transition-all font-sans relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 bottom-0 left-0 w-1 bg-cyber-blue/30" />
+                      <div className="absolute top-1.5 right-2.5 text-[8.5px] text-cyber-blue font-bold tracking-widest font-mono-cyber opacity-70">
+                        VERIFIED FEEDBACK
+                      </div>
+                      <p className="text-[11px] leading-relaxed text-slate-300 italic pt-1">
+                        "{t.text}"
+                      </p>
+                      <div className="flex flex-col mt-1 font-mono-cyber">
+                        <span className="text-[10px] font-black text-white uppercase tracking-wider">{t.name}</span>
+                        <span className="text-[8px] text-slate-500 uppercase font-bold">{t.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {/* 2nd copy of items for seamless looping */}
+                  {testimonials.map((t, idx) => (
+                    <div 
+                      key={`t2-${idx}`} 
+                      className="w-[290px] sm:w-[330px] bg-slate-900/50 backdrop-blur-md border border-slate-800/80 rounded p-4 pl-6 flex flex-col justify-between gap-2.5 shrink-0 hover:border-slate-700/80 hover:bg-slate-900/80 transition-all font-sans relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 bottom-0 left-0 w-1 bg-cyber-blue/30" />
+                      <div className="absolute top-1.5 right-2.5 text-[8.5px] text-cyber-blue font-bold tracking-widest font-mono-cyber opacity-70">
+                        VERIFIED FEEDBACK
+                      </div>
+                      <p className="text-[11px] leading-relaxed text-slate-300 italic pt-1">
+                        "{t.text}"
+                      </p>
+                      <div className="flex flex-col mt-1 font-mono-cyber">
+                        <span className="text-[10px] font-black text-white uppercase tracking-wider">{t.name}</span>
+                        <span className="text-[8px] text-slate-500 uppercase font-bold">{t.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Dedicated Cyber Footer Section */}
+            <footer className="relative w-full border-t border-slate-900 bg-slate-950/80 backdrop-blur-md pt-10 pb-6 mt-12 px-2 font-cyber">
+              {/* Top border glowing gradients */}
+              <div className="absolute top-0 left-0 w-1/4 h-[1px] bg-gradient-to-r from-cyber-blue to-transparent" />
+              <div className="absolute top-0 right-0 w-1/4 h-[1px] bg-gradient-to-l from-cyber-red to-transparent" />
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8 border-b border-slate-900 pb-8 text-left">
+                {/* Brand Column */}
+                <div className="md:col-span-5 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="relative p-1.5 rounded border border-cyber-blue/30 bg-slate-900 flex items-center justify-center">
+                      <Zap className="w-4 h-4 text-cyber-blue animate-pulse" />
+                    </div>
+                    <span className="text-base font-black tracking-widest text-white font-mono-cyber">
+                      LLM // ARENA
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed max-w-sm font-sans">
+                    The leading adversarial simulation sandbox for LLM firewalls and prompt security. Real-time red team payload injection profiling and blue team defense compliance auditing.
+                  </p>
+                </div>
+
+                {/* Quick Navigation Links */}
+                <div className="md:col-span-3 space-y-3 font-mono-cyber uppercase text-xs">
+                  <h5 className="font-black text-slate-300 tracking-wider">NAVIGATIONAL INDEX</h5>
+                  <ul className="space-y-2 text-slate-400">
+                    <li>
+                      <button onClick={() => setActiveView('dashboard')} className="hover:text-cyber-blue transition-colors">
+                        [01] DASHBOARD TERMINAL
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => setActiveView('sandbox')} className="hover:text-cyber-blue transition-colors">
+                        [02] SANDBOX PROFILE
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => setActiveView('threats')} className="hover:text-cyber-blue transition-colors">
+                        [03] THREAT INTEL DATABASE
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => setActiveView('logs')} className="hover:text-cyber-blue transition-colors">
+                        [04] HISTORICAL RUN LOGS
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Threat Spec Info */}
+                <div className="md:col-span-4 space-y-3 font-mono-cyber uppercase text-xs">
+                  <h5 className="font-black text-slate-300 tracking-wider">SYSTEM REGISTRY</h5>
+                  <div className="space-y-1.5 text-slate-400 flex flex-col">
+                    <div className="flex justify-between border-b border-slate-900 pb-1">
+                      <span>Node Status:</span>
+                      <span className="text-emerald-500 font-bold">ONLINE</span>
+                    </div>
+                    <div className="flex justify-between border-b border-slate-900 pb-1">
+                      <span>Defense Version:</span>
+                      <span className="text-cyber-blue">Sentinel v1.4.2</span>
+                    </div>
+                    <div className="flex justify-between border-b border-slate-900 pb-1">
+                      <span>Threat Vector Feed:</span>
+                      <span className="text-cyber-red">ACTIVE</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Copyright & Telemetry Row */}
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-[10px] text-slate-500 font-mono-cyber uppercase">
+                <div>
+                  © 2026 LLM ARENA. ALL SYSTEMS SECURED.
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+                  CONNECTION: SECURE TRACE TERMINATED
+                </div>
+              </div>
+            </footer>
+
+          </main>
       </div>
     </div>
   );

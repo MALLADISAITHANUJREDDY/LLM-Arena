@@ -228,7 +228,7 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
             <Shield className="w-5 h-5 text-cyber-blue" />
           )}
           <div>
-            <h2 className={`text-sm font-black tracking-widest uppercase ${isRed ? 'text-cyber-red text-glow-red' : 'text-cyber-blue text-glow-blue'}`}>
+            <h2 className={`text-base font-black tracking-widest uppercase ${isRed ? 'text-cyber-red text-glow-red' : 'text-cyber-blue text-glow-blue'}`}>
               {isRed ? 'RED TEAM // ATTACKER' : 'BLUE TEAM // DEFENDER'}
             </h2>
             <p className="text-[11px] text-slate-400 uppercase tracking-wider">
@@ -248,7 +248,7 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
             <Brain className={`w-5 h-5 ${accentColor}`} />
           </div>
           <div>
-            <h3 className="text-xs font-bold text-slate-100">{modelName}</h3>
+            <h3 className="text-sm font-black text-slate-100 uppercase tracking-wide">{modelName}</h3>
             <div className="flex gap-2.5 text-[11px] text-slate-400 font-bold">
               <span>PARAMS: <strong className="text-slate-200">{parameters}</strong></span>
               <span>•</span>
@@ -356,7 +356,7 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
             <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-blue" />
             
             <div className="border-b border-slate-900 pb-1.5 shrink-0">
-              <h3 className="text-xs font-black uppercase text-cyber-blue text-glow-blue flex items-center gap-1.5">
+              <h3 className="text-sm font-black uppercase text-cyber-blue text-glow-blue flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5" /> API & CHATBOT CONNECTOR
               </h3>
               <p className="text-[10px] text-slate-400 uppercase mt-0.5 leading-none">
