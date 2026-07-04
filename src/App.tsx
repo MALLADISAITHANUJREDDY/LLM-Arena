@@ -1659,54 +1659,6 @@ function App() {
                     <p className="text-sm leading-relaxed text-slate-200 font-cyber font-medium tracking-wide">
                       The Adversarial LLM Arena is a next-generation security sandbox designed to test and benchmark model resilience against malicious actors. By simulating real-time offensive injection sequences, complex roleplay jailbreaks, and token exfiltration parameters, security teams can proactively audit firewall rules and guardrails. Build and test defensive architectures to anonymize PII data leakage, prevent factual hallucinations, and compile standard-compliant compliance reports instantly.
                     </p>
-
-                    {/* Integrated Foundation LLM Providers */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-900 pt-3 mt-3 w-full">
-                      <span className="text-[9px] text-slate-500 font-mono-cyber uppercase font-bold tracking-widest block">
-                        INTEGRATED LLM VENDORS:
-                      </span>
-                      <div className="flex flex-wrap items-center gap-4 text-[10px] font-mono-cyber uppercase font-black">
-                        {/* OpenAI */}
-                        <div className="flex items-center gap-1.5 text-emerald-400 opacity-80 hover:opacity-100 transition-opacity select-none">
-                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-3 18c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-6-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm6 0c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5zm-3-6c-.828 0-1.5-.672-1.5-1.5s.672-1.5 1.5-1.5 1.5.672 1.5 1.5-.672 1.5-1.5 1.5z" />
-                          </svg>
-                          OpenAI
-                        </div>
-                        {/* Google Gemini */}
-                        <div className="flex items-center gap-1.5 text-cyan-400 opacity-80 hover:opacity-100 transition-opacity select-none">
-                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                            <path d="M12 0L14 8L22 10L14 12L12 20L10 12L2 10L10 8L12 0Z" />
-                          </svg>
-                          Google
-                        </div>
-                        {/* Anthropic */}
-                        <div className="flex items-center gap-1.5 text-amber-500 opacity-80 hover:opacity-100 transition-opacity select-none">
-                          <span className="w-3.5 h-3.5 rounded-full border border-amber-500 flex items-center justify-center text-[7.5px] font-black leading-none tracking-tighter">A</span>
-                          Anthropic
-                        </div>
-                        {/* Meta LLaMA */}
-                        <div className="flex items-center gap-1.5 text-blue-500 opacity-80 hover:opacity-100 transition-opacity select-none">
-                          <span className="text-[12px] leading-none font-bold">∞</span>
-                          Meta
-                        </div>
-                        {/* Mistral AI */}
-                        <div className="flex items-center gap-1.5 text-orange-500 opacity-80 hover:opacity-100 transition-opacity select-none">
-                          <span className="w-2.5 h-2.5 bg-orange-500 rounded-[2px]" />
-                          Mistral AI
-                        </div>
-                        {/* Microsoft */}
-                        <div className="flex items-center gap-1.5 text-slate-200 opacity-80 hover:opacity-100 transition-opacity select-none">
-                          <div className="grid grid-cols-2 gap-0.5 w-3 h-3">
-                            <div className="bg-red-500 w-1.2 h-1.2" />
-                            <div className="bg-green-500 w-1.2 h-1.2" />
-                            <div className="bg-blue-500 w-1.2 h-1.2" />
-                            <div className="bg-yellow-500 w-1.2 h-1.2" />
-                          </div>
-                          Microsoft
-                        </div>
-                      </div>
-                    </div>
                   </div>
                   <div className="flex flex-row md:flex-col text-xs font-mono-cyber uppercase gap-x-5 gap-y-2 shrink-0 text-slate-400 border-t md:border-t-0 md:border-l border-slate-850 pt-3 md:pt-0 md:pl-6 w-full md:w-auto">
                     <div>Status: <span className="text-emerald-500 font-bold text-glow-blue">READY</span></div>
