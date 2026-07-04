@@ -1730,7 +1730,7 @@ function App() {
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6 items-stretch">
                   
                   {/* Left Column: Red Team Panel */}
-                  <div className="xl:col-span-3 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px]">
+                  <div className="xl:col-span-3 md:col-span-1 h-[460px] md:h-[540px] lg:h-[580px] xl:h-[600px] flex flex-col">
                     <TeamPanel
                       side="red"
                       health={redHealth}
@@ -1766,7 +1766,7 @@ function App() {
                   </div>
 
                   {/* Center Column: Center Battle Arena or Performance Report */}
-                  <div className="xl:col-span-4 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px]">
+                  <div className="xl:col-span-4 md:col-span-1 h-[460px] md:h-[540px] lg:h-[580px] xl:h-[600px] flex flex-col">
                     {simulationStatus === 'FINISHED' ? (
                       <EvaluationReport 
                         safetyProfile={safetyProfile} 
@@ -1785,7 +1785,7 @@ function App() {
                   </div>
 
                   {/* Right Column: Blue Team Panel */}
-                  <div className="xl:col-span-3 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px]">
+                  <div className="xl:col-span-3 md:col-span-1 h-[460px] md:h-[540px] lg:h-[580px] xl:h-[600px] flex flex-col">
                     <TeamPanel
                       side="blue"
                       health={blueHealth}
@@ -1824,7 +1824,7 @@ function App() {
                   </div>
 
                   {/* Far Right Column: Right Live Battle Log */}
-                  <div className="xl:col-span-2 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px] flex flex-col">
+                  <div className="xl:col-span-2 md:col-span-1 h-[460px] md:h-[540px] lg:h-[580px] xl:h-[600px] flex flex-col">
                     <BattleLog
                       logs={logs}
                       onClearLogs={() => setLogs([])}
