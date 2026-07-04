@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crosshair, HelpCircle, Activity } from 'lucide-react';
+import { Crosshair, HelpCircle } from 'lucide-react';
 
 interface ArenaProps {
   activeAttack: {
@@ -21,21 +21,114 @@ export const Arena: React.FC<ArenaProps> = ({
 }) => {
   const successRate = queriesCount > 0 ? Math.round(((queriesCount - blockedCount) / queriesCount) * 100) : 100;
 
-  // Render mock network nodes
-  const nodes = [
-    { id: 1, x: 20, y: 30, type: 'input' },
-    { id: 2, x: 20, y: 70, type: 'input' },
-    { id: 3, x: 45, y: 20, type: 'core' },
-    { id: 4, x: 45, y: 50, type: 'core' },
-    { id: 5, x: 45, y: 80, type: 'core' },
-    { id: 6, x: 80, y: 30, type: 'output' },
-    { id: 7, x: 80, y: 70, type: 'output' },
+  // Pulse animation clock for organic shape vibration
+  const [pulseTime, setPulseTime] = React.useState(0);
+  React.useEffect(() => {
+    let animId: number;
+    const tick = () => {
+      setPulseTime((t) => t + 0.05);
+      animId = requestAnimationFrame(tick);
+    };
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  // Geometry configuration
+  const R = 64; // Max radius within 200x200 canvas
+  const CX = 100;
+  const CY = 100;
+
+  // Concentric angles for the 6 vertices (Top, Top-Right, Bottom-Right, Bottom, Bottom-Left, Top-Left)
+  const angles = [
+    -Math.PI / 2,                  // 0 (Top, ATACK TEAM)
+    -Math.PI / 2 + Math.PI / 3,    // 1 (Top-Right, BLUE TEAM)
+    -Math.PI / 2 + 2 * Math.PI / 3, // 2 (Bottom-Right, DEFENSE)
+    -Math.PI / 2 + Math.PI,        // 3 (Bottom, ATTACEK VECTORS)
+    -Math.PI / 2 + 4 * Math.PI / 3, // 4 (Bottom-Left, MEEDUAL VECTORS)
+    -Math.PI / 2 + 5 * Math.PI / 3  // 5 (Top-Left, ATTACK)
   ];
 
-  // Tight vertical clash offset (keeps the fight exactly on the central VS badge)
-  const clashOffset = activeAttack ? (activeAttack.timestamp % 3) : 0;
-  const clashTop = clashOffset === 1 ? '48%' : clashOffset === 2 ? '52%' : '50%';
-  const clashTopVal = clashOffset === 1 ? 48 : clashOffset === 2 ? 52 : 50;
+  // Base state profiles for red and blue polygons
+  const baseRed = [0.72, 0.48, 0.38, 0.82, 0.76, 0.86];
+  const baseBlue = [0.55, 0.84, 0.88, 0.46, 0.58, 0.38];
+
+  // Calculate dynamic vectors based on active attack state
+  const getDynamicRed = () => {
+    const values = [...baseRed];
+    if (activeAttack) {
+      if (activeAttack.sender === 'red') {
+        // Boost attacker axes
+        values[0] = 0.94;
+        values[3] = 0.92;
+        values[4] = 0.90;
+        values[5] = 0.96;
+        // Suppress defense
+        values[1] = 0.30;
+        values[2] = 0.28;
+      } else {
+        // Under counter-attack
+        values[0] = 0.40;
+        values[3] = 0.45;
+        values[5] = 0.35;
+      }
+    }
+    // Add subtle organic sine noise
+    return values.map((val, idx) => Math.max(0.15, Math.min(0.98, val + Math.sin(pulseTime + idx) * 0.02)));
+  };
+
+  const getDynamicBlue = () => {
+    const values = [...baseBlue];
+    if (activeAttack) {
+      if (activeAttack.sender === 'blue') {
+        // Boost defender axes
+        values[1] = 0.96;
+        values[2] = 0.94;
+        values[0] = 0.75;
+        // Suppress attacker
+        values[3] = 0.28;
+        values[4] = 0.30;
+        values[5] = 0.20;
+      } else {
+        // Under attack
+        values[1] = 0.35;
+        values[2] = 0.40;
+        values[0] = 0.38;
+      }
+    }
+    // Add subtle organic cosine noise
+    return values.map((val, idx) => Math.max(0.15, Math.min(0.98, val + Math.cos(pulseTime * 1.2 + idx) * 0.02)));
+  };
+
+  const redValues = getDynamicRed();
+  const blueValues = getDynamicBlue();
+
+  const getPointsString = (values: number[]) => {
+    return values.map((val, i) => {
+      const r = val * R;
+      const x = CX + r * Math.cos(angles[i]);
+      const y = CY + r * Math.sin(angles[i]);
+      return `${x},${y}`;
+    }).join(' ');
+  };
+
+  const redPoints = getPointsString(redValues);
+  const bluePoints = getPointsString(blueValues);
+
+  const nodeLabels: {
+    text: string;
+    color: string;
+    textClass: string;
+    anchor: 'end' | 'middle' | 'start';
+    dx: number;
+    dy: number;
+  }[] = [
+    { text: 'ATACK TEAM', color: '#ff0055', textClass: 'fill-rose-350 font-bold', anchor: 'middle', dx: 0, dy: -18 },
+    { text: 'BLUE TEAM', color: '#00f0ff', textClass: 'fill-blue-400 font-bold', anchor: 'start', dx: 16, dy: -4 },
+    { text: 'DEFENSE', color: '#00f0ff', textClass: 'fill-blue-400 font-bold', anchor: 'start', dx: 16, dy: 10 },
+    { text: 'ATTACEK VECTORS', color: '#10b981', textClass: 'fill-emerald-400 font-bold', anchor: 'middle', dx: 0, dy: 24 },
+    { text: 'MEEDUAL VECTORS', color: '#10b981', textClass: 'fill-emerald-400 font-bold', anchor: 'end', dx: -16, dy: 10 },
+    { text: 'ATTACK', color: '#ff0055', textClass: 'fill-rose-350 font-bold', anchor: 'end', dx: -16, dy: -4 }
+  ];
 
   return (
     <div className="relative flex flex-col h-full bg-slate-950/60 border border-slate-800/80 rounded p-6 overflow-hidden min-h-[400px] justify-between">
@@ -64,345 +157,154 @@ export const Arena: React.FC<ArenaProps> = ({
         </div>
       </div>
 
-      {/* Center Visualization: Nodes and Animations */}
-      <div className="relative flex-1 flex items-center justify-center my-4 min-h-[220px]">
-        {/* Network connections */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Static gray connections */}
-          <path d="M 20 30 L 45 20 M 20 30 L 45 50 M 20 70 L 45 50 M 20 70 L 45 80 M 45 20 L 80 30 M 45 50 L 80 30 M 45 50 L 80 70 M 45 80 L 80 70" stroke="rgba(51,65,85,0.6)" strokeWidth="0.75" fill="none" />
+      {/* Center Visualization: Hexagonal Radar Web Grid */}
+      <div className="relative flex-1 flex items-center justify-center my-4 min-h-[260px]">
+        
+        <svg className="w-full max-w-[280px] aspect-square overflow-visible z-0" viewBox="0 0 200 200">
+          {/* Glowing Filter Definitions */}
+          <defs>
+            <filter id="laser-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="radar-glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
 
-          {/* Active attack vector laser simulation converging in the center */}
+          {/* 1. Concentric Helper Hexagons */}
+          {[0.2, 0.4, 0.6, 0.8, 1.0].map((scale) => (
+            <polygon
+              key={`grid-${scale}`}
+              points={angles.map(angle => `${CX + R * scale * Math.cos(angle)},${CY + R * scale * Math.sin(angle)}`).join(' ')}
+              fill="none"
+              stroke="rgba(30, 41, 59, 0.85)"
+              strokeWidth="0.8"
+            />
+          ))}
+
+          {/* 2. Axis lines connecting center to vertices */}
+          {angles.map((angle, i) => (
+            <line
+              key={`axis-${i}`}
+              x1={CX}
+              y1={CY}
+              x2={CX + R * Math.cos(angle)}
+              y2={CY + R * Math.sin(angle)}
+              stroke="rgba(30, 41, 59, 0.7)"
+              strokeWidth="0.75"
+              strokeDasharray="2,2"
+            />
+          ))}
+
+          {/* 3. Animating team polygons */}
+          <motion.polygon
+            points={redPoints}
+            fill="rgba(239, 68, 68, 0.12)"
+            stroke="#ff0055"
+            strokeWidth="1.5"
+            className="drop-shadow-[0_0_6px_rgba(255,0,85,0.4)]"
+            animate={{ points: redPoints }}
+            transition={{ type: 'spring', stiffness: 85, damping: 15 }}
+          />
+
+          <motion.polygon
+            points={bluePoints}
+            fill="rgba(6, 182, 212, 0.12)"
+            stroke="#00f0ff"
+            strokeWidth="1.5"
+            className="drop-shadow-[0_0_6px_rgba(0,240,255,0.4)]"
+            animate={{ points: bluePoints }}
+            transition={{ type: 'spring', stiffness: 85, damping: 15 }}
+          />
+
+          {/* 4. Active Red Attack Laser Beam */}
           <AnimatePresence>
             {activeAttack && activeAttack.sender === 'red' && (
-              <motion.path
-                key="attack-laser"
-                d={`M 20 30 L 45 ${clashTopVal} L 50 ${clashTopVal}`}
-                stroke="url(#red-glow-gradient)"
+              <motion.line
+                x1="-30"
+                y1="82"
+                x2="230"
+                y2="118"
+                stroke="#ff0055"
                 strokeWidth="2.5"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
+                filter="url(#laser-glow)"
+                initial={{ opacity: 0, pathLength: 0 }}
+                animate={{ opacity: [0, 1, 1, 0], pathLength: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-              />
-            )}
-            {activeAttack && activeAttack.sender === 'blue' && (
-              <motion.path
-                key="defend-pulse"
-                d={`M 80 30 L 45 ${clashTopVal} L 50 ${clashTopVal}`}
-                stroke="url(#blue-glow-gradient)"
-                strokeWidth="2.5"
-                fill="none"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
               />
             )}
           </AnimatePresence>
 
-          <defs>
-            <linearGradient id="red-glow-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ff0055" stopOpacity="1" />
-              <stop offset="100%" stopColor="#ff0055" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="blue-glow-gradient" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
-              <stop offset="100%" stopColor="#00f0ff" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
+          {/* 5. Active Blue Defense Expanding Ring Wave */}
+          <AnimatePresence>
+            {activeAttack && activeAttack.sender === 'blue' && (
+              <motion.circle
+                cx={CX}
+                cy={CY}
+                r={R}
+                fill="none"
+                stroke="#00f0ff"
+                strokeWidth="2"
+                filter="url(#radar-glow-cyan)"
+                initial={{ scale: 0.1, opacity: 0.9 }}
+                animate={{ scale: [0.1, 1.25], opacity: [0.9, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+            )}
+          </AnimatePresence>
 
-        {/* 1. Red Firing & Red Rockets/Fire Bullets Animation targeting the center */}
-        <AnimatePresence>
-          {activeAttack && activeAttack.sender === 'red' && (
-            <>
-              {/* Swarm of 7 Firing Fire Bullets */}
-              <motion.div
-                key="bullet-1"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '35%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '35%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeIn" }}
-              />
-              <motion.div
-                key="bullet-2"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '45%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '45%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.35, delay: 0.05, ease: "easeIn" }}
-              />
-              <motion.div
-                key="bullet-3"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '55%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '55%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.38, delay: 0.1, ease: "easeIn" }}
-              />
-              <motion.div
-                key="bullet-4"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '65%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '65%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.42, delay: 0.15, ease: "easeIn" }}
-              />
-              <motion.div
-                key="bullet-5"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '40%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '40%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3, delay: 0.2, ease: "easeIn" }}
-              />
-              <motion.div
-                key="bullet-6"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '60%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '60%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, delay: 0.25, ease: "easeIn" }}
-              />
-              <motion.div
-                key="bullet-7"
-                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
-                style={{ left: '20%', top: '50%', boxShadow: '0 0 8px #ff0055' }}
-                initial={{ left: '20%', top: '50%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.35, delay: 0.3, ease: "easeIn" }}
-              />
-
-              {/* Red Bomb 1 (Main Blast) */}
-              <motion.div
-                key="bomb-blast-1"
-                className="absolute w-20 h-20 rounded-full bg-gradient-radial from-cyber-red/90 via-red-600/25 to-transparent z-25 pointer-events-none"
-                style={{ 
-                  left: '50%', 
-                  top: clashTop, 
-                  transform: 'translate(-50%, -50%)',
-                  boxShadow: '0 0 45px rgba(255, 0, 85, 0.9), inset 0 0 20px rgba(255, 0, 85, 0.5)'
-                }}
-                initial={{ scale: 0.1, opacity: 0 }}
-                animate={{ scale: [0.1, 2.5, 3.2], opacity: [0, 1, 0.8, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
-              />
-
-              {/* Red Bomb 2 (Staggered upper blast) */}
-              <motion.div
-                key="bomb-blast-2"
-                className="absolute w-14 h-14 rounded-full bg-gradient-radial from-cyber-red/80 via-red-700/20 to-transparent z-25 pointer-events-none"
-                style={{ 
-                  left: '49%', 
-                  top: `calc(${clashTop} - 10px)`, 
-                  transform: 'translate(-50%, -50%)',
-                  boxShadow: '0 0 35px rgba(255, 0, 85, 0.8)'
-                }}
-                initial={{ scale: 0.1, opacity: 0 }}
-                animate={{ scale: [0.1, 2.2, 2.8], opacity: [0, 1, 0.6, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45, delay: 0.42, ease: "easeOut" }}
-              />
-
-              {/* Red Bomb 3 (Staggered lower blast) */}
-              <motion.div
-                key="bomb-blast-3"
-                className="absolute w-14 h-14 rounded-full bg-gradient-radial from-cyber-red/85 via-red-700/20 to-transparent z-25 pointer-events-none"
-                style={{ 
-                  left: '51%', 
-                  top: `calc(${clashTop} + 10px)`, 
-                  transform: 'translate(-50%, -50%)',
-                  boxShadow: '0 0 35px rgba(255, 0, 85, 0.8)'
-                }}
-                initial={{ scale: 0.1, opacity: 0 }}
-                animate={{ scale: [0.1, 2.2, 2.8], opacity: [0, 1, 0.6, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45, delay: 0.48, ease: "easeOut" }}
-              />
-
-              {/* Expanding shockwave rings from center */}
-              <motion.div
-                key="shockwave-ring-1"
-                className="absolute w-12 h-12 border-2 border-cyber-red/60 rounded-full z-20 pointer-events-none"
-                style={{ left: '50%', top: clashTop, transform: 'translate(-50%, -50%)' }}
-                initial={{ scale: 0.2, opacity: 0 }}
-                animate={{ scale: 3.8, opacity: [0, 1, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.55, delay: 0.38, ease: "easeOut" }}
-              />
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* 2. Blue Team Shield & Sprinkle Animation in the center Clash Point */}
-        <AnimatePresence>
-          {activeAttack && activeAttack.sender === 'blue' && (
-            <>
-              {/* Blue glowing crescent shield deflecting in the center */}
-              <motion.div
-                key="defender-shield-center"
-                className="absolute w-24 h-24 rounded-full border-r-4 border-cyber-blue z-25 pointer-events-none"
-                style={{ 
-                  left: '50%', 
-                  top: clashTop, 
-                  transform: 'translate(-50%, -50%)',
-                  boxShadow: '10px 0 25px rgba(0, 240, 255, 0.85), inset -4px 0 10px rgba(0, 240, 255, 0.4)',
-                  filter: 'drop-shadow(0 0 12px rgba(0, 240, 255, 0.6))'
-                }}
-                initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
-                animate={{ 
-                  opacity: [0, 1, 0.9, 1, 0], 
-                  scale: [0.5, 1.15, 1, 1.1, 0.5],
-                  rotate: [-45, 0, 0, 0, -45]
-                }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.9, ease: "easeInOut" }}
-              />
-
-              {/* Central diagnostic ripple expanding from center */}
-              <motion.div
-                key="defense-ripple-center"
-                className="absolute w-16 h-16 border border-cyber-blue/50 rounded-full z-5 pointer-events-none"
-                style={{ left: '50%', top: clashTop, transform: 'translate(-50%, -50%)' }}
-                initial={{ scale: 0.3, opacity: 0 }}
-                animate={{ scale: 2.2, opacity: [0, 0.6, 0] }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
-              />
-
-              {/* Blue Sprinkle/Sparks shooting leftwards from center clash */}
-              <motion.div
-                key="sprinkle-1"
-                className="absolute w-2 h-1 bg-cyber-blue rounded-full z-20 pointer-events-none"
-                style={{ left: '48%', top: `${clashTopVal - 8}%`, boxShadow: '0 0 8px #00f0ff' }}
-                initial={{ x: 0, y: 0, opacity: 1 }}
-                animate={{ x: -100, y: -45, opacity: 0, rotate: 25 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
-              />
-              <motion.div
-                key="sprinkle-2"
-                className="absolute w-2.5 h-1 bg-cyber-blue rounded-full z-20 pointer-events-none"
-                style={{ left: '46%', top: clashTop, boxShadow: '0 0 8px #00f0ff' }}
-                initial={{ x: 0, y: 0, opacity: 1 }}
-                animate={{ x: -120, y: 5, opacity: 0, rotate: -5 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
-              />
-              <motion.div
-                key="sprinkle-3"
-                className="absolute w-2 h-1 bg-cyber-blue rounded-full z-20 pointer-events-none"
-                style={{ left: '48%', top: `${clashTopVal + 8}%`, boxShadow: '0 0 8px #00f0ff' }}
-                initial={{ x: 0, y: 0, opacity: 1 }}
-                animate={{ x: -100, y: 45, opacity: 0, rotate: -25 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.45, delay: 0.1, ease: "easeOut" }}
-              />
-              <motion.div
-                key="sprinkle-4"
-                className="absolute w-2 h-2 bg-cyan-400 rounded-full z-20 pointer-events-none"
-                style={{ left: '47%', top: `${clashTopVal - 4}%`, boxShadow: '0 0 8px #00f0ff' }}
-                initial={{ x: 0, y: 0, opacity: 1 }}
-                animate={{ x: -80, y: -20, opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
-              />
-              <motion.div
-                key="sprinkle-5"
-                className="absolute w-2 h-2 bg-cyan-400 rounded-full z-20 pointer-events-none"
-                style={{ left: '47%', top: `${clashTopVal + 4}%`, boxShadow: '0 0 8px #00f0ff' }}
-                initial={{ x: 0, y: 0, opacity: 1 }}
-                animate={{ x: -80, y: 20, opacity: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
-              />
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* Network Nodes */}
-        <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          {nodes.map((node) => {
-            const isTargeted = activeAttack && (
-              (activeAttack.sender === 'red' && node.type === 'output') ||
-              (activeAttack.sender === 'blue' && node.type === 'input')
-            );
+          {/* 6. Nodes & Text Labels for Vertices */}
+          {angles.map((angle, i) => {
+            const x = CX + R * Math.cos(angle);
+            const y = CY + R * Math.sin(angle);
+            const nl = nodeLabels[i];
             return (
-              <div
-                key={node.id}
-                style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
-              >
-                <div
-                  className={`w-4 h-4 rounded-full border transition-all duration-300 ${
-                    isTargeted
-                      ? activeAttack.sender === 'red'
-                        ? 'bg-cyber-red border-white shadow-[0_0_18px_#ff0055] scale-125'
-                        : 'bg-cyber-blue border-white shadow-[0_0_18px_#00f0ff] scale-125'
-                      : 'bg-slate-900 border-slate-600'
-                  }`}
-                />
-                <div className={`w-2.5 h-2.5 rounded-full mt-1 ${isTargeted ? 'bg-white animate-ping' : 'bg-transparent'}`} />
-              </div>
+              <g key={`node-${i}`} className="select-none font-mono-cyber">
+                {/* Outer pulsing ring halo */}
+                <circle cx={x} cy={y} r="8" fill={`${nl.color}15`} stroke={`${nl.color}40`} strokeWidth="1" />
+                {/* Solid core indicator */}
+                <circle cx={x} cy={y} r="3" fill={nl.color} />
+                {/* Vertex Label Text */}
+                <text
+                  x={x}
+                  y={y}
+                  dx={nl.dx}
+                  dy={nl.dy}
+                  textAnchor={nl.anchor}
+                  fontSize="6.8"
+                  fontWeight="950"
+                  letterSpacing="0.4"
+                  className={`${nl.textClass} tracking-widest`}
+                >
+                  {nl.text}
+                </text>
+              </g>
             );
           })}
-        </div>
+        </svg>
 
-        {/* VS Shield / Badge */}
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="relative w-28 h-28 flex items-center justify-center" style={{ top: clashOffset === 1 ? '-6px' : clashOffset === 2 ? '6px' : '0px', transition: 'top 0.3s ease' }}>
-            {/* Pulsing neon rings */}
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 rounded-full border border-dashed border-slate-700"
-            />
-            <motion.div
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute inset-2 rounded-full border border-double border-slate-600 bg-slate-950 shadow-[0_0_20px_rgba(0,0,0,0.9)]"
-            />
-            <div className="absolute inset-0 rounded-full bg-gradient-radial from-slate-900/10 via-transparent to-transparent pointer-events-none" />
-
-            {/* Glowing red & blue boundary splits */}
-            <div className="absolute top-0 bottom-0 left-[50%] w-[1px] bg-gradient-to-b from-cyber-red/35 via-transparent to-cyber-blue/35" />
-
-            {/* VS text with interactive glows */}
-            <div className="relative flex flex-col items-center justify-center font-mono-cyber">
-              <span className="text-[10px] text-slate-400 tracking-widest uppercase font-bold">NODE STATE</span>
-              <h2 className="text-3xl font-black italic tracking-tighter text-white font-mono-cyber leading-none select-none flex">
-                <span className="text-cyber-red text-glow-red pr-0.5">V</span>
-                <span className="text-cyber-blue text-glow-blue">S</span>
-              </h2>
-              <span className="text-[9px] text-slate-300 mt-1 uppercase font-bold tracking-wider px-1 bg-slate-900 border border-slate-800 rounded">
-                SIM_ACTIVE
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Live Attack Beam Alerts */}
+        {/* Floating Telemetry Badge Overlay */}
         <AnimatePresence>
           {activeAttack && (
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              className="absolute flex items-center gap-2 px-3 py-1.5 bg-slate-950 border border-slate-800 rounded shadow-2xl font-mono-cyber text-xs z-20"
-              style={{ top: clashOffset === 1 ? '70%' : clashOffset === 2 ? '30%' : '66%', left: '50%', transform: 'translateX(-50%)', transition: 'top 0.3s ease' }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="absolute px-3 py-1.5 bg-slate-950/90 border border-slate-800 rounded shadow-2xl font-mono-cyber text-[10px] z-10 flex items-center gap-2"
+              style={{ bottom: '5%' }}
             >
-              <Activity className={`w-3.5 h-3.5 ${activeAttack.sender === 'red' ? 'text-cyber-red animate-pulse' : 'text-cyber-blue animate-pulse'}`} />
-              <span className="text-slate-300 font-bold">PROPAGATING:</span>
+              <span className={`w-2 h-2 rounded-full inline-block ${activeAttack.sender === 'red' ? 'bg-cyber-red animate-pulse' : 'bg-cyber-blue animate-pulse'}`} />
+              <span className="text-slate-400">PROPAGATING:</span>
               <strong className={activeAttack.sender === 'red' ? 'text-cyber-red' : 'text-cyber-blue'}>
                 {activeAttack.type.toUpperCase()}
               </strong>
