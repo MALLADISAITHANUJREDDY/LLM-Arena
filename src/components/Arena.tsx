@@ -32,6 +32,11 @@ export const Arena: React.FC<ArenaProps> = ({
     { id: 7, x: 80, y: 70, type: 'output' },
   ];
 
+  // Tight vertical clash offset (keeps the fight exactly on the central VS badge)
+  const clashOffset = activeAttack ? (activeAttack.timestamp % 3) : 0;
+  const clashTop = clashOffset === 1 ? '48%' : clashOffset === 2 ? '52%' : '50%';
+  const clashTopVal = clashOffset === 1 ? 48 : clashOffset === 2 ? 52 : 50;
+
   return (
     <div className="relative flex flex-col h-full bg-slate-950/60 border border-slate-800/80 rounded p-6 overflow-hidden min-h-[400px] justify-between">
       {/* Abstract Cyber Grid Overlay */}
@@ -71,7 +76,7 @@ export const Arena: React.FC<ArenaProps> = ({
             {activeAttack && activeAttack.sender === 'red' && (
               <motion.path
                 key="attack-laser"
-                d="M 20 30 L 45 50 L 50 50"
+                d={`M 20 30 L 45 ${clashTopVal} L 50 ${clashTopVal}`}
                 stroke="url(#red-glow-gradient)"
                 strokeWidth="2.5"
                 fill="none"
@@ -84,7 +89,7 @@ export const Arena: React.FC<ArenaProps> = ({
             {activeAttack && activeAttack.sender === 'blue' && (
               <motion.path
                 key="defend-pulse"
-                d="M 80 30 L 45 50 L 50 50"
+                d={`M 80 30 L 45 ${clashTopVal} L 50 ${clashTopVal}`}
                 stroke="url(#blue-glow-gradient)"
                 strokeWidth="2.5"
                 fill="none"
@@ -108,65 +113,130 @@ export const Arena: React.FC<ArenaProps> = ({
           </defs>
         </svg>
 
-        {/* 1. Red Firing & Red Rockets Animation targeting the center Clash Point */}
+        {/* 1. Red Firing & Red Rockets/Fire Bullets Animation targeting the center */}
         <AnimatePresence>
           {activeAttack && activeAttack.sender === 'red' && (
             <>
-              {/* Rocket 1 (top-left convergence) */}
+              {/* Swarm of 7 Firing Fire Bullets */}
               <motion.div
-                key="rocket-1"
-                className="absolute w-7 h-2 bg-gradient-to-r from-transparent via-red-500 to-cyber-red rounded-full z-10"
-                style={{ left: '20%', top: '30%', boxShadow: '0 0 10px #ff0055' }}
-                initial={{ left: '20%', top: '30%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: '50%', opacity: [1, 1, 0], scale: [0.8, 1.2, 0.5] }}
+                key="bullet-1"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '35%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '35%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeIn" }}
+                transition={{ duration: 0.4, ease: "easeIn" }}
               />
-              {/* Rocket 2 (horizontal convergence) */}
               <motion.div
-                key="rocket-2"
-                className="absolute w-9 h-2.5 bg-gradient-to-r from-transparent via-red-400 to-cyber-red rounded-full z-10"
-                style={{ left: '20%', top: '50%', boxShadow: '0 0 15px #ff0055' }}
-                initial={{ left: '20%', top: '50%', opacity: 1, scale: 1 }}
-                animate={{ left: '50%', top: '50%', opacity: [1, 1, 0], scale: [1, 1.3, 0.6] }}
+                key="bullet-2"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '45%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '45%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.4, delay: 0.05, ease: "easeIn" }}
+                transition={{ duration: 0.35, delay: 0.05, ease: "easeIn" }}
               />
-              {/* Rocket 3 (bottom-left convergence) */}
               <motion.div
-                key="rocket-3"
-                className="absolute w-7 h-2 bg-gradient-to-r from-transparent via-red-500 to-cyber-red rounded-full z-10"
-                style={{ left: '20%', top: '70%', boxShadow: '0 0 10px #ff0055' }}
-                initial={{ left: '20%', top: '70%', opacity: 1, scale: 0.8 }}
-                animate={{ left: '50%', top: '50%', opacity: [1, 1, 0], scale: [0.8, 1.2, 0.5] }}
+                key="bullet-3"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '55%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '55%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 0.1, ease: "easeIn" }}
+                transition={{ duration: 0.38, delay: 0.1, ease: "easeIn" }}
+              />
+              <motion.div
+                key="bullet-4"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '65%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '65%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.42, delay: 0.15, ease: "easeIn" }}
+              />
+              <motion.div
+                key="bullet-5"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '40%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '40%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, delay: 0.2, ease: "easeIn" }}
+              />
+              <motion.div
+                key="bullet-6"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '60%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '60%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, delay: 0.25, ease: "easeIn" }}
+              />
+              <motion.div
+                key="bullet-7"
+                className="absolute w-4 h-1.5 bg-gradient-to-r from-transparent to-cyber-red rounded-full z-15"
+                style={{ left: '20%', top: '50%', boxShadow: '0 0 8px #ff0055' }}
+                initial={{ left: '20%', top: '50%', opacity: 1, scale: 0.8 }}
+                animate={{ left: '50%', top: clashTop, opacity: [1, 1, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.35, delay: 0.3, ease: "easeIn" }}
               />
 
-              {/* Red Fire Bomb Explosion in the Center (VS node) */}
+              {/* Red Bomb 1 (Main Blast) */}
               <motion.div
-                key="fire-bomb-blast"
-                className="absolute w-20 h-20 rounded-full bg-gradient-radial from-cyber-red/90 via-red-650/25 to-transparent z-25 pointer-events-none"
+                key="bomb-blast-1"
+                className="absolute w-20 h-20 rounded-full bg-gradient-radial from-cyber-red/90 via-red-600/25 to-transparent z-25 pointer-events-none"
                 style={{ 
                   left: '50%', 
-                  top: '50%', 
+                  top: clashTop, 
                   transform: 'translate(-50%, -50%)',
-                  filter: 'blur(1px)',
-                  boxShadow: '0 0 40px rgba(255, 0, 85, 0.8), inset 0 0 20px rgba(255, 0, 85, 0.4)'
+                  boxShadow: '0 0 45px rgba(255, 0, 85, 0.9), inset 0 0 20px rgba(255, 0, 85, 0.5)'
                 }}
                 initial={{ scale: 0.1, opacity: 0 }}
                 animate={{ scale: [0.1, 2.5, 3.2], opacity: [0, 1, 0.8, 0] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, delay: 0.35, ease: "easeOut" }}
+                transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
+              />
+
+              {/* Red Bomb 2 (Staggered upper blast) */}
+              <motion.div
+                key="bomb-blast-2"
+                className="absolute w-14 h-14 rounded-full bg-gradient-radial from-cyber-red/80 via-red-700/20 to-transparent z-25 pointer-events-none"
+                style={{ 
+                  left: '49%', 
+                  top: `calc(${clashTop} - 10px)`, 
+                  transform: 'translate(-50%, -50%)',
+                  boxShadow: '0 0 35px rgba(255, 0, 85, 0.8)'
+                }}
+                initial={{ scale: 0.1, opacity: 0 }}
+                animate={{ scale: [0.1, 2.2, 2.8], opacity: [0, 1, 0.6, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, delay: 0.42, ease: "easeOut" }}
+              />
+
+              {/* Red Bomb 3 (Staggered lower blast) */}
+              <motion.div
+                key="bomb-blast-3"
+                className="absolute w-14 h-14 rounded-full bg-gradient-radial from-cyber-red/85 via-red-700/20 to-transparent z-25 pointer-events-none"
+                style={{ 
+                  left: '51%', 
+                  top: `calc(${clashTop} + 10px)`, 
+                  transform: 'translate(-50%, -50%)',
+                  boxShadow: '0 0 35px rgba(255, 0, 85, 0.8)'
+                }}
+                initial={{ scale: 0.1, opacity: 0 }}
+                animate={{ scale: [0.1, 2.2, 2.8], opacity: [0, 1, 0.6, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.45, delay: 0.48, ease: "easeOut" }}
               />
 
               {/* Expanding shockwave rings from center */}
               <motion.div
                 key="shockwave-ring-1"
                 className="absolute w-12 h-12 border-2 border-cyber-red/60 rounded-full z-20 pointer-events-none"
-                style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+                style={{ left: '50%', top: clashTop, transform: 'translate(-50%, -50%)' }}
                 initial={{ scale: 0.2, opacity: 0 }}
-                animate={{ scale: 3.5, opacity: [0, 1, 0] }}
+                animate={{ scale: 3.8, opacity: [0, 1, 0] }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.55, delay: 0.38, ease: "easeOut" }}
               />
@@ -184,10 +254,10 @@ export const Arena: React.FC<ArenaProps> = ({
                 className="absolute w-24 h-24 rounded-full border-r-4 border-cyber-blue z-25 pointer-events-none"
                 style={{ 
                   left: '50%', 
-                  top: '50%', 
+                  top: clashTop, 
                   transform: 'translate(-50%, -50%)',
-                  boxShadow: '8px 0 20px rgba(0, 240, 255, 0.7), inset -4px 0 10px rgba(0, 240, 255, 0.3)',
-                  filter: 'drop-shadow(0 0 10px rgba(0, 240, 255, 0.5))'
+                  boxShadow: '10px 0 25px rgba(0, 240, 255, 0.85), inset -4px 0 10px rgba(0, 240, 255, 0.4)',
+                  filter: 'drop-shadow(0 0 12px rgba(0, 240, 255, 0.6))'
                 }}
                 initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
                 animate={{ 
@@ -203,7 +273,7 @@ export const Arena: React.FC<ArenaProps> = ({
               <motion.div
                 key="defense-ripple-center"
                 className="absolute w-16 h-16 border border-cyber-blue/50 rounded-full z-5 pointer-events-none"
-                style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+                style={{ left: '50%', top: clashTop, transform: 'translate(-50%, -50%)' }}
                 initial={{ scale: 0.3, opacity: 0 }}
                 animate={{ scale: 2.2, opacity: [0, 0.6, 0] }}
                 exit={{ opacity: 0 }}
@@ -214,7 +284,7 @@ export const Arena: React.FC<ArenaProps> = ({
               <motion.div
                 key="sprinkle-1"
                 className="absolute w-2 h-1 bg-cyber-blue rounded-full z-20 pointer-events-none"
-                style={{ left: '48%', top: '42%', boxShadow: '0 0 8px #00f0ff' }}
+                style={{ left: '48%', top: `${clashTopVal - 8}%`, boxShadow: '0 0 8px #00f0ff' }}
                 initial={{ x: 0, y: 0, opacity: 1 }}
                 animate={{ x: -100, y: -45, opacity: 0, rotate: 25 }}
                 exit={{ opacity: 0 }}
@@ -223,7 +293,7 @@ export const Arena: React.FC<ArenaProps> = ({
               <motion.div
                 key="sprinkle-2"
                 className="absolute w-2.5 h-1 bg-cyber-blue rounded-full z-20 pointer-events-none"
-                style={{ left: '46%', top: '50%', boxShadow: '0 0 8px #00f0ff' }}
+                style={{ left: '46%', top: clashTop, boxShadow: '0 0 8px #00f0ff' }}
                 initial={{ x: 0, y: 0, opacity: 1 }}
                 animate={{ x: -120, y: 5, opacity: 0, rotate: -5 }}
                 exit={{ opacity: 0 }}
@@ -232,7 +302,7 @@ export const Arena: React.FC<ArenaProps> = ({
               <motion.div
                 key="sprinkle-3"
                 className="absolute w-2 h-1 bg-cyber-blue rounded-full z-20 pointer-events-none"
-                style={{ left: '48%', top: '58%', boxShadow: '0 0 8px #00f0ff' }}
+                style={{ left: '48%', top: `${clashTopVal + 8}%`, boxShadow: '0 0 8px #00f0ff' }}
                 initial={{ x: 0, y: 0, opacity: 1 }}
                 animate={{ x: -100, y: 45, opacity: 0, rotate: -25 }}
                 exit={{ opacity: 0 }}
@@ -241,7 +311,7 @@ export const Arena: React.FC<ArenaProps> = ({
               <motion.div
                 key="sprinkle-4"
                 className="absolute w-2 h-2 bg-cyan-400 rounded-full z-20 pointer-events-none"
-                style={{ left: '47%', top: '46%', boxShadow: '0 0 8px #00f0ff' }}
+                style={{ left: '47%', top: `${clashTopVal - 4}%`, boxShadow: '0 0 8px #00f0ff' }}
                 initial={{ x: 0, y: 0, opacity: 1 }}
                 animate={{ x: -80, y: -20, opacity: 0 }}
                 exit={{ opacity: 0 }}
@@ -250,7 +320,7 @@ export const Arena: React.FC<ArenaProps> = ({
               <motion.div
                 key="sprinkle-5"
                 className="absolute w-2 h-2 bg-cyan-400 rounded-full z-20 pointer-events-none"
-                style={{ left: '47%', top: '54%', boxShadow: '0 0 8px #00f0ff' }}
+                style={{ left: '47%', top: `${clashTopVal + 4}%`, boxShadow: '0 0 8px #00f0ff' }}
                 initial={{ x: 0, y: 0, opacity: 1 }}
                 animate={{ x: -80, y: 20, opacity: 0 }}
                 exit={{ opacity: 0 }}
@@ -290,7 +360,7 @@ export const Arena: React.FC<ArenaProps> = ({
 
         {/* VS Shield / Badge */}
         <div className="relative z-10 flex flex-col items-center">
-          <div className="relative w-28 h-28 flex items-center justify-center">
+          <div className="relative w-28 h-28 flex items-center justify-center" style={{ top: clashOffset === 1 ? '-6px' : clashOffset === 2 ? '6px' : '0px', transition: 'top 0.3s ease' }}>
             {/* Pulsing neon rings */}
             <motion.div
               animate={{ rotate: 360 }}
@@ -328,7 +398,8 @@ export const Arena: React.FC<ArenaProps> = ({
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              className="absolute top-2/3 flex items-center gap-2 px-3 py-1.5 bg-slate-950 border border-slate-800 rounded shadow-2xl font-mono-cyber text-xs z-20"
+              className="absolute flex items-center gap-2 px-3 py-1.5 bg-slate-950 border border-slate-800 rounded shadow-2xl font-mono-cyber text-xs z-20"
+              style={{ top: clashOffset === 1 ? '70%' : clashOffset === 2 ? '30%' : '66%', left: '50%', transform: 'translateX(-50%)', transition: 'top 0.3s ease' }}
             >
               <Activity className={`w-3.5 h-3.5 ${activeAttack.sender === 'red' ? 'text-cyber-red animate-pulse' : 'text-cyber-blue animate-pulse'}`} />
               <span className="text-slate-300 font-bold">PROPAGATING:</span>

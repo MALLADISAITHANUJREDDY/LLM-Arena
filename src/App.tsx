@@ -14,7 +14,8 @@ import {
   PlayCircle,
   Percent,
   TrendingUp,
-  ShieldX
+  ShieldX,
+  FileText
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { TeamPanel } from './components/TeamPanel';
@@ -41,66 +42,94 @@ function Sidebar({ activeView, onChangeView }: SidebarProps) {
   ];
 
   return (
-    <aside className="w-16 md:w-20 bg-slate-950/95 border-r border-slate-900 flex flex-col items-center py-6 gap-8 shrink-0 relative z-20 h-screen sticky top-0">
-      {/* Decorative vertical line */}
-      <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-cyber-blue via-transparent to-cyber-red opacity-30" />
+    <>
+      {/* Desktop Vertical Sidebar */}
+      <aside className="hidden lg:flex w-16 md:w-20 bg-slate-950/95 border-r border-slate-900 flex-col items-center py-6 gap-8 shrink-0 relative z-20 h-screen sticky top-0">
+        {/* Decorative vertical line */}
+        <div className="absolute right-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-cyber-blue via-transparent to-cyber-red opacity-30" />
 
-      {/* Top Brand Logo Accent */}
-      <div className="relative group cursor-pointer">
-        <div className="w-10 h-10 rounded border border-cyber-blue/40 bg-cyber-blue/10 flex items-center justify-center shadow-[0_0_12px_rgba(0,240,255,0.2)] group-hover:border-cyber-blue group-hover:shadow-[0_0_15px_rgba(0,240,255,0.35)] transition-all duration-300">
-          <span className="font-mono-cyber font-black text-cyber-blue text-xl select-none">Ω</span>
+        {/* Top Brand Logo Accent */}
+        <div className="relative group cursor-pointer">
+          <div className="w-10 h-10 rounded border border-cyber-blue/40 bg-cyber-blue/10 flex items-center justify-center shadow-[0_0_12px_rgba(0,240,255,0.2)] group-hover:border-cyber-blue group-hover:shadow-[0_0_15px_rgba(0,240,255,0.35)] transition-all duration-300">
+            <span className="font-mono-cyber font-black text-cyber-blue text-xl select-none">Ω</span>
+          </div>
         </div>
-      </div>
 
-      {/* Nav List */}
-      <nav className="flex-1 flex flex-col gap-4 w-full px-2">
+        {/* Nav List */}
+        <nav className="flex-1 flex flex-col gap-4 w-full px-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeView === item.id;
+
+            return (
+              <div key={item.id} className="relative group flex justify-center">
+                <motion.button
+                  onClick={() => onChangeView(item.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`w-12 h-12 rounded flex items-center justify-center transition-all cursor-pointer relative ${
+                    isActive 
+                      ? 'bg-cyber-blue/15 text-cyber-blue border border-cyber-blue/40 shadow-[0_0_10px_rgba(0,240,255,0.25)]' 
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+
+                  {/* Left Active Glow Indicator Line */}
+                  {isActive && (
+                    <motion.div 
+                      layoutId="activeIndicator"
+                      className="absolute left-0 w-[2.5px] h-6 bg-cyber-blue rounded-r" 
+                    />
+                  )}
+                </motion.button>
+
+                {/* Tooltip */}
+                <div className="absolute left-16 md:left-20 top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-[10px] font-mono-cyber font-bold text-slate-250 uppercase tracking-wider whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 z-35 shadow-2xl">
+                  <span className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-slate-950 border-l border-b border-slate-800 rotate-45" />
+                  {item.label}
+                </div>
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* Bottom Profile/Help Accent */}
+        <div className="flex flex-col gap-4 items-center">
+          <button className="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-355 hover:bg-slate-900/50 transition-all cursor-pointer">
+            <HelpCircle className="w-5 h-5" />
+          </button>
+          <div className="w-8 h-8 rounded border border-slate-800 bg-slate-900 flex items-center justify-center cursor-pointer select-none">
+            <span className="text-[10px] font-bold text-slate-455 font-mono-cyber">U_1</span>
+          </div>
+        </div>
+      </aside>
+
+      {/* Mobile/Tablet Bottom Navigation Bar */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-950/95 border-t border-slate-900/85 backdrop-blur-md flex justify-around items-center px-4 z-40 shadow-[0_-5px_15px_rgba(0,0,0,0.5)]">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
 
           return (
-            <div key={item.id} className="relative group flex justify-center">
-              <motion.button
-                onClick={() => onChangeView(item.id)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`w-12 h-12 rounded flex items-center justify-center transition-all cursor-pointer relative ${
-                  isActive 
-                    ? 'bg-cyber-blue/15 text-cyber-blue border border-cyber-blue/40 shadow-[0_0_10px_rgba(0,240,255,0.25)]' 
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-
-                {/* Left Active Glow Indicator Line */}
-                {isActive && (
-                  <motion.div 
-                    layoutId="activeIndicator"
-                    className="absolute left-0 w-[2.5px] h-6 bg-cyber-blue rounded-r" 
-                  />
-                )}
-              </motion.button>
-
-              {/* Tooltip */}
-              <div className="absolute left-16 md:left-20 top-1/2 -translate-y-1/2 ml-2 px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-[10px] font-mono-cyber font-bold text-slate-250 uppercase tracking-wider whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200 z-35 shadow-2xl">
-                <span className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-slate-950 border-l border-b border-slate-800 rotate-45" />
-                {item.label}
-              </div>
-            </div>
+            <button
+              key={item.id}
+              onClick={() => onChangeView(item.id)}
+              className={`flex flex-col items-center justify-center w-12 h-12 rounded transition-all cursor-pointer ${
+                isActive 
+                  ? 'text-cyber-blue' 
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="text-[8px] uppercase tracking-wider mt-1 font-bold font-mono-cyber">
+                {item.id === 'dashboard' ? 'Dash' : item.id === 'sandbox' ? 'Play' : item.id === 'threats' ? 'Threat' : item.id === 'logs' ? 'Logs' : item.id === 'analytics' ? 'Charts' : 'Config'}
+              </span>
+            </button>
           );
         })}
       </nav>
-
-      {/* Bottom Profile/Help Accent */}
-      <div className="flex flex-col gap-4 items-center">
-        <button className="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-350 hover:bg-slate-900/50 transition-all cursor-pointer">
-          <HelpCircle className="w-5 h-5" />
-        </button>
-        <div className="w-8 h-8 rounded border border-slate-800 bg-slate-900 flex items-center justify-center cursor-pointer select-none">
-          <span className="text-[10px] font-bold text-slate-455 font-mono-cyber">U_1</span>
-        </div>
-      </div>
-    </aside>
+    </>
   );
 }
 
@@ -773,6 +802,210 @@ function EvaluationReport({ safetyProfile, queriesCount, blockedCount, onReset }
     recommendation = 'Strong prompt safety. Recommend deploying semantic validation layers and token restriction policies to protect PII parameters.';
   }
 
+  const downloadPDFReport = () => {
+    const sanitize = (str: string) => str.replace(/[()]/g, '\\$&');
+    const vendorEsc = sanitize(safetyProfile.vendor);
+    const injectEsc = sanitize(safetyProfile.injectPass);
+    const jailbreakEsc = sanitize(safetyProfile.jailbreakPass);
+    const seclusionEsc = sanitize(safetyProfile.seclusionPass);
+    const piiEsc = sanitize(safetyProfile.piiPass);
+    const hallucinationEsc = sanitize(safetyProfile.hallucinationPass);
+    const dateStr = sanitize(new Date().toLocaleString());
+
+    // Calculate progress bar widths dynamically (max width 200 pt)
+    const getBarWidth = (fractionStr: string) => {
+      const parts = fractionStr.split('/');
+      if (parts.length === 2) {
+        const passed = parseInt(parts[0]);
+        const total = parseInt(parts[1]);
+        if (total > 0) return Math.min(200, Math.round((passed / total) * 200));
+      }
+      return 150;
+    };
+    const injectWidth = getBarWidth(safetyProfile.injectPass);
+    const jailbreakWidth = getBarWidth(safetyProfile.jailbreakPass);
+    const seclusionWidth = getBarWidth(safetyProfile.seclusionPass);
+    const piiWidth = getBarWidth(safetyProfile.piiPass);
+    const hallucinationWidth = getBarWidth(safetyProfile.hallucinationPass);
+
+    // Manual, professional dark-themed PDF matching the UI
+    const pdfContent = [
+      "%PDF-1.4",
+      "1 0 obj",
+      "<< /Type /Catalog /Pages 2 0 R >>",
+      "endobj",
+      "2 0 obj",
+      "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+      "endobj",
+      "3 0 obj",
+      "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.27 841.89] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>",
+      "endobj",
+      "4 0 obj",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+      "endobj",
+      "5 0 obj",
+      "<< /Length 3200 >>",
+      "stream",
+      "q",
+      // Slate 950 Dark Background (0.01 0.02 0.08 rg)
+      "0.01 0.02 0.08 rg",
+      "0 0 595.27 841.89 re f",
+      
+      // Cyber Blue Outer Border Frame
+      "0.0 0.94 1.0 RG 1 w",
+      "15 15 565.27 811.89 re S",
+      
+      // Gray Divider line below header
+      "0.12 0.16 0.23 RG",
+      "40 745 m 555 745 l S",
+
+      // --- SCORECARD BACKGROUND BOXES ---
+      // Card 1: Safety Index
+      "0.06 0.09 0.16 rg",
+      "0.12 0.16 0.23 RG",
+      "40 670 160 55 re f",
+      "40 670 160 55 re S",
+      
+      // Card 2: Audited Packets
+      "215 670 160 55 re f",
+      "215 670 160 55 re S",
+      
+      // Card 3: Bypass Index
+      "390 670 165 55 re f",
+      "390 670 165 55 re S",
+
+      // --- LINE GRAPH BACKGROUND BOX ---
+      "0.035 0.05 0.086 rg",
+      "40 495 515 145 re f",
+      "40 495 515 145 re S",
+      
+      // Graph internal grid lines
+      "0.08 0.11 0.18 RG",
+      "40 545 m 555 545 l S",
+      "40 590 m 555 590 l S",
+
+      // --- DRAW GRAPH PATHS ---
+      // 1. Cyan Safety Compliance line
+      "0.0 0.94 1.0 RG 1.5 w",
+      "40 505 m 90 520 l 140 500 l 190 550 l 240 605 l 290 575 l 340 625 l 390 610 l 440 635 l 490 625 l 555 635 l S",
+      
+      // 2. Red Threat Exposure dashed line
+      "1.0 0.2 0.35 RG 1 w [3 3] 0 d",
+      "40 502 m 90 510 l 140 505 l 190 535 l 240 515 l 290 522 l 340 510 l 390 528 l 440 515 l 490 520 l 555 512 l S",
+      "[] 0 d", // reset dash
+
+      // --- VULNERABILITY PROGRESS BARS BACKGROUNDS & FILLS ---
+      // Row 1: Prompt Injection
+      "0.12 0.16 0.23 rg",
+      "300 408 200 7 re f",
+      "0.0 0.94 1.0 rg",
+      `300 408 ${injectWidth} 7 re f`,
+
+      // Row 2: Jailbreaking
+      "0.12 0.16 0.23 rg",
+      "300 383 200 7 re f",
+      "0.0 0.94 1.0 rg",
+      `300 383 ${jailbreakWidth} 7 re f`,
+
+      // Row 3: Context Seclusion
+      "0.12 0.16 0.23 rg",
+      "300 358 200 7 re f",
+      "0.0 0.94 1.0 rg",
+      `300 358 ${seclusionWidth} 7 re f`,
+
+      // Row 4: PII Filtering
+      "0.12 0.16 0.23 rg",
+      "300 333 200 7 re f",
+      "0.0 0.94 1.0 rg",
+      `300 333 ${piiWidth} 7 re f`,
+
+      // Row 5: Factuality Rate
+      "0.12 0.16 0.23 rg",
+      "300 308 200 7 re f",
+      "0.0 0.94 1.0 rg",
+      `300 308 ${hallucinationWidth} 7 re f`,
+
+      // --- RECOMMENDATIONS BOX ---
+      "0.06 0.09 0.16 rg",
+      "0.12 0.16 0.23 RG",
+      "40 60 515 190 re f",
+      "40 60 515 190 re S",
+      "Q",
+
+      // --- TEXT STREAMS ---
+      // Title Block
+      "BT /F1 18 Tf 1 1 1 rg 40 775 Td (AI SECURITY BATTLE ARENA - AUDIT REPORT) Tj ET",
+      "BT /F1 9 Tf 0.0 0.94 1.0 rg 40 757 Td (FIREWALL CREDENTIAL COMPLIANCE EVALUATION NODE) Tj ET",
+      "BT /F1 8 Tf 0.5 0.5 0.5 rg 400 775 Td (GENERATED: " + dateStr + ") Tj ET",
+      
+      // Card 1 Text (MODEL SAFETY RATIO)
+      "BT /F1 8 Tf 0.6 0.6 0.6 rg 50 710 Td (MODEL SAFETY RATIO) Tj ET",
+      "BT /F1 18 Tf 0.1 0.8 0.5 rg 50 682 Td (" + safetyProfile.safetyIndex + "%) Tj ET",
+      
+      // Card 2 Text (AUDITED PACKETS)
+      "BT /F1 8 Tf 0.6 0.6 0.6 rg 225 710 Td (AUDITED PACKETS) Tj ET",
+      "BT /F1 18 Tf 0.0 0.94 1.0 rg 225 682 Td (" + queriesCount + ") Tj ET",
+      
+      // Card 3 Text (COMPROMISE RATE)
+      "BT /F1 8 Tf 0.6 0.6 0.6 rg 400 710 Td (COMPROMISE RATE) Tj ET",
+      "BT /F1 18 Tf 1.0 0.2 0.35 rg 400 682 Td (" + safetyProfile.compromiseRate + "%) Tj ET",
+
+      // Section titles
+      "BT /F1 10 Tf 1 1 1 rg 40 450 Td (VULNERABILITY MATRIX ANALYSIS) Tj ET",
+      
+      // Row labels
+      "BT /F1 9 Tf 0.85 0.85 0.85 rg 50 408 Td (Prompt Injection Bypass) Tj ET",
+      "BT /F1 9 Tf 1 1 1 rg 240 408 Td (" + injectEsc + ") Tj ET",
+      
+      "BT /F1 9 Tf 0.85 0.85 0.85 rg 50 383 Td (Jailbreak Protection Rate) Tj ET",
+      "BT /F1 9 Tf 1 1 1 rg 240 383 Td (" + jailbreakEsc + ") Tj ET",
+      
+      "BT /F1 9 Tf 0.85 0.85 0.85 rg 50 358 Td (Context Seclusion Safeguard) Tj ET",
+      "BT /F1 9 Tf 1 1 1 rg 240 358 Td (" + seclusionEsc + ") Tj ET",
+      
+      "BT /F1 9 Tf 0.85 0.85 0.85 rg 50 333 Td (PII Exfiltration Anonymizer) Tj ET",
+      "BT /F1 9 Tf 1 1 1 rg 240 333 Td (" + piiEsc + ") Tj ET",
+      
+      "BT /F1 9 Tf 0.85 0.85 0.85 rg 50 308 Td (Factuality Hallucination Filter) Tj ET",
+      "BT /F1 9 Tf 1 1 1 rg 240 308 Td (" + hallucinationEsc + ") Tj ET",
+
+      // Recommendations Section
+      "BT /F1 10 Tf 1 1 1 rg 40 260 Td (AUDITOR GENERAL SYSTEM HARDENING PROPOSALS) Tj ET",
+      "BT /F1 8.5 Tf 0.8 0.85 0.95 rg 55 220 Td (1. Establish strict context delimiters and sanitize prompt boundaries before model ingestion.) Tj ET",
+      "BT /F1 8.5 Tf 0.8 0.85 0.95 rg 55 198 Td (2. Deploy semantic vector scanners to check similarity indexes against known exploit coordinate lists.) Tj ET",
+      "BT /F1 8.5 Tf 0.8 0.85 0.95 rg 55 176 Td (3. Implement client-side output sanitization matrices to prevent downstream script injections.) Tj ET",
+      "BT /F1 8.5 Tf 0.8 0.85 0.95 rg 55 154 Td (4. Restrict model context bounds and apply aggressive rate limits to counter Denial of Service attacks.) Tj ET",
+      "BT /F1 8.5 Tf 0.8 0.85 0.95 rg 55 132 Td (5. System status verified as ACTIVE COMPLIANT based on credentials vendor: " + vendorEsc + ") Tj ET",
+
+      // Footer
+      "BT /F1 7.5 Tf 0.4 0.4 0.4 rg 40 35 Td (LLM ARENA AUTOMATED VIRTUAL CONSOLE SCAN NODE • SECURE SEC-LEVEL 4 CLUSTER) Tj ET",
+      "ET",
+      "endstream",
+      "endobj",
+      "xref",
+      "0 6",
+      "0000000000 65535 f",
+      "0000000009 00000 n",
+      "0000000056 00000 n",
+      "0000000111 00000 n",
+      "0000000250 00000 n",
+      "0000000319 00000 n",
+      "trailer",
+      "<< /Size 6 /Root 1 0 R >>",
+      "startxref",
+      "3600",
+      "%%EOF"
+    ].join("\n");
+
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `LLM_Arena_Security_Report_${safetyProfile.vendor.replace(/\s+/g, '_')}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="relative flex flex-col h-full bg-slate-950 border border-slate-800/80 rounded p-5 overflow-hidden min-h-[400px] justify-between font-mono-cyber">
       {/* Decorative corners */}
@@ -855,14 +1088,172 @@ function EvaluationReport({ safetyProfile, queriesCount, blockedCount, onReset }
       </div>
 
       {/* Footer controls */}
-      <button
-        onClick={onReset}
-        className="w-full py-2 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-slate-500 text-xs font-bold uppercase tracking-widest text-slate-200 hover:text-white flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98"
-      >
-        <TrendingUp className="w-4 h-4 text-cyber-blue animate-pulse" /> Reset Simulation & Reconfigure
-      </button>
+      <div className="flex flex-col sm:flex-row gap-2 w-full mt-2 shrink-0">
+        <button
+          onClick={downloadPDFReport}
+          className="flex-1 py-2.5 rounded bg-cyber-blue/20 hover:bg-cyber-blue/30 border border-cyber-blue/40 text-xs font-black uppercase tracking-wider text-cyber-blue flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98"
+        >
+          <FileText className="w-4 h-4" /> Download PDF Report
+        </button>
+
+        <button
+          onClick={onReset}
+          className="flex-1 py-2.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-slate-500 text-xs font-bold uppercase tracking-widest text-slate-200 hover:text-white flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-98"
+        >
+          <TrendingUp className="w-4 h-4 text-cyber-blue animate-pulse" /> Reset Arena
+        </button>
+      </div>
     </div>
   );
+}
+
+// ==========================================
+// 3.8 Sound Effects Synthesizer Utility
+// ==========================================
+class SoundEffects {
+  private static ctx: AudioContext | null = null;
+
+  private static getContext(): AudioContext {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    return this.ctx;
+  }
+
+  public static playAttack() {
+    try {
+      const ctx = this.getContext();
+      if (ctx.state === 'suspended') ctx.resume();
+      const now = ctx.currentTime;
+
+      // --- HIGH PITCHED / PUNCHY MUZZLE SNAPS ---
+      const clickOsc = ctx.createOscillator();
+      const clickGain = ctx.createGain();
+      clickOsc.connect(clickGain);
+      clickGain.connect(ctx.destination);
+      clickOsc.type = 'sawtooth';
+      clickOsc.frequency.setValueAtTime(3200, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+      clickGain.gain.setValueAtTime(0.3, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.05);
+
+      // --- BEEFY SAWTOOTH LASER SWEEP (LOUD VOLUME) ---
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      osc1.connect(gainNode);
+      osc2.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      osc1.type = 'sawtooth';
+      osc1.frequency.setValueAtTime(1200, now);
+      osc1.frequency.exponentialRampToValueAtTime(220, now + 0.35);
+
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(1210, now); // slightly detuned for chorus
+      osc2.frequency.exponentialRampToValueAtTime(225, now + 0.35);
+
+      gainNode.gain.setValueAtTime(0.48, now); // HIGH volume!
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      osc1.start(now);
+      osc1.stop(now + 0.35);
+      osc2.start(now);
+      osc2.stop(now + 0.35);
+
+      // --- CRACKLING EXPLOSION RUMBLE (LOUD VOLUME) ---
+      setTimeout(() => {
+        try {
+          const expOsc = ctx.createOscillator();
+          const expGain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(380, ctx.currentTime);
+
+          expOsc.connect(filter);
+          filter.connect(expGain);
+          expGain.connect(ctx.destination);
+
+          expOsc.type = 'sawtooth'; // heavier explosion body
+          expOsc.frequency.setValueAtTime(160, ctx.currentTime);
+          expOsc.frequency.linearRampToValueAtTime(25, ctx.currentTime + 0.6);
+
+          expGain.gain.setValueAtTime(0.55, ctx.currentTime); // HIGH volume explosion!
+          expGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+
+          expOsc.start();
+          expOsc.stop(ctx.currentTime + 0.6);
+        } catch (e) {
+          console.warn(e);
+        }
+      }, 250);
+    } catch (e) {
+      console.warn('Audio Context disabled or not supported:', e);
+    }
+  }
+
+  public static playDefense() {
+    try {
+      const ctx = this.getContext();
+      if (ctx.state === 'suspended') ctx.resume();
+      const now = ctx.currentTime;
+
+      // --- HIGH SCI-FI SHIELD Hum (LOUD VOLUME) ---
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+      
+      filter.type = 'bandpass';
+      filter.Q.setValueAtTime(4, now);
+      filter.frequency.setValueAtTime(500, now);
+      filter.frequency.exponentialRampToValueAtTime(1800, now + 0.45);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(220, now);
+      osc1.frequency.linearRampToValueAtTime(950, now + 0.45);
+
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(222, now);
+      osc2.frequency.linearRampToValueAtTime(960, now + 0.45);
+
+      gainNode.gain.setValueAtTime(0.42, now); // HIGH volume!
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+      osc1.start(now);
+      osc1.stop(now + 0.45);
+      osc2.start(now);
+      osc2.stop(now + 0.45);
+
+      // --- SHIMMERING METAL COLLISION SPARKS (LOUD & CRISP) ---
+      for (let i = 0; i < 5; i++) {
+        const delay = 0.05 * i;
+        const blipOsc = ctx.createOscillator();
+        const blipGain = ctx.createGain();
+
+        blipOsc.connect(blipGain);
+        blipGain.connect(ctx.destination);
+
+        blipOsc.type = 'sine';
+        blipOsc.frequency.setValueAtTime(2200 - (300 * i), now + delay);
+        blipGain.gain.setValueAtTime(0.18, now + delay); // loud sparks!
+        blipGain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.1);
+
+        blipOsc.start(now + delay);
+        blipOsc.stop(now + delay + 0.1);
+      }
+    } catch (e) {
+      console.warn('Audio Context disabled or not supported:', e);
+    }
+  }
 }
 
 // ==========================================
@@ -897,6 +1288,9 @@ function App() {
 
   // Battle logs state
   const [logs, setLogs] = useState<LogItem[]>([]);
+
+  // Defender connection status
+  const [blueConnectionState, setBlueConnectionState] = useState<'CONNECTED' | 'DISCONNECTED' | 'CONNECTING'>('CONNECTED');
 
   // Safety profile state dynamically adjusted by API keys
   const [safetyProfile, setSafetyProfile] = useState<{
@@ -1030,6 +1424,7 @@ function App() {
 
     if (isAttackerStep) {
       // Attacker (Red) Actions
+      SoundEffects.playAttack();
       const attack = redAttacks[Math.floor(Math.random() * redAttacks.length)];
       const baseDamage = Math.floor(Math.random() * 16) + 10; // 10-25 damage
       const modifier = (100 - safetyProfile.safetyIndex) / 22; // baseline modifier scaled to 78% custom key
@@ -1084,6 +1479,7 @@ function App() {
       }
     } else {
       // Defender (Blue) actions / counter-shields
+      SoundEffects.playDefense();
       const defense = blueDefenses[Math.floor(Math.random() * blueDefenses.length)];
       const shieldRegen = Math.floor(Math.random() * 11) + 5; // 5-15 shield regen
       
@@ -1118,7 +1514,7 @@ function App() {
   useEffect(() => {
     if (simulationStatus !== 'RUNNING') return;
 
-    const intervalTime = 3000 / simulationSpeed;
+    const intervalTime = 1200 / simulationSpeed;
     const interval = setInterval(() => {
       handleNextStep();
     }, intervalTime);
@@ -1146,11 +1542,41 @@ function App() {
     if (simulationStatus === 'FINISHED') {
       handleReset();
     }
+    if (simulationStatus !== 'RUNNING' && blueConnectionState !== 'CONNECTED') {
+      setLogs((prev) => [
+        ...prev,
+        {
+          id: `log-block-${Date.now()}`,
+          timestamp: getTimestamp(),
+          sender: 'system',
+          category: 'SYSTEM',
+          message: 'ERROR: Cannot initiate simulation. Defender Node offline.',
+          details: 'API endpoint connection validation failed. Please check credentials configuration.'
+        }
+      ]);
+      alert('Cannot start simulation: Defender Node is offline. Please configure credentials and connect the node.');
+      return;
+    }
     setSimulationStatus((prev) => (prev === 'RUNNING' ? 'PAUSED' : 'RUNNING'));
   };
 
   // Trigger single manual attack step
   const handleSimulateAttack = () => {
+    if (blueConnectionState !== 'CONNECTED') {
+      setLogs((prev) => [
+        ...prev,
+        {
+          id: `log-block-${Date.now()}`,
+          timestamp: getTimestamp(),
+          sender: 'system',
+          category: 'SYSTEM',
+          message: 'ERROR: Action blocked. Defender Node offline.',
+          details: 'Handshake credentials invalid. Configure credentials in Blue panel.'
+        }
+      ]);
+      alert('Action blocked: Defender Node is offline. Connect the node first.');
+      return;
+    }
     if (simulationStatus === 'IDLE' || simulationStatus === 'PAUSED') {
       handleNextStep();
     } else if (simulationStatus === 'FINISHED') {
@@ -1180,15 +1606,15 @@ function App() {
         />
 
         {/* Layout container */}
-        <main className="flex-1 p-4 lg:p-6 flex flex-col gap-6 w-full max-w-[1700px] mx-auto relative z-5">
+        <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6 flex flex-col gap-6 w-full max-w-[1700px] mx-auto relative z-5">
           
             {activeView === 'dashboard' && (
               <>
                 {/* Upper Grid Layout: Red Team, Arena, Blue Team, Right Live Battle Log */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-12 gap-6 items-stretch">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6 items-stretch">
                   
                   {/* Left Column: Red Team Panel */}
-                  <div className="xl:col-span-3 lg:col-span-1 min-h-[530px]">
+                  <div className="xl:col-span-3 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px]">
                     <TeamPanel
                       side="red"
                       health={redHealth}
@@ -1200,6 +1626,7 @@ function App() {
                       logsCount={logs.filter((l) => l.sender === 'red').length}
                       isIdle={simulationStatus === 'IDLE'}
                       onSelectAttack={(attackName) => {
+                        SoundEffects.playAttack();
                         setRedActiveAction(attackName);
                         setBlueActiveAction(''); // Clear blue action so only one is active
                         setActiveAttack({
@@ -1223,7 +1650,7 @@ function App() {
                   </div>
 
                   {/* Center Column: Center Battle Arena or Performance Report */}
-                  <div className="xl:col-span-4 lg:col-span-1 min-h-[530px]">
+                  <div className="xl:col-span-4 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px]">
                     {simulationStatus === 'FINISHED' ? (
                       <EvaluationReport 
                         safetyProfile={safetyProfile} 
@@ -1242,7 +1669,7 @@ function App() {
                   </div>
 
                   {/* Right Column: Blue Team Panel */}
-                  <div className="xl:col-span-3 lg:col-span-1 min-h-[530px]">
+                  <div className="xl:col-span-3 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px]">
                     <TeamPanel
                       side="blue"
                       health={blueHealth}
@@ -1254,7 +1681,9 @@ function App() {
                       logsCount={logs.filter((l) => l.sender === 'blue').length}
                       isIdle={simulationStatus === 'IDLE'}
                       onConnectNode={handleConnectNode}
+                      onConnectionStatusChange={setBlueConnectionState}
                       onSendBlueMessage={(msg) => {
+                        SoundEffects.playDefense();
                         setBlueActiveAction('AI Chat Response');
                         setRedActiveAction(''); // Clear attacker selection
                         setActiveAttack({
@@ -1279,7 +1708,7 @@ function App() {
                   </div>
 
                   {/* Far Right Column: Right Live Battle Log */}
-                  <div className="xl:col-span-2 lg:col-span-1 min-h-[530px] flex flex-col">
+                  <div className="xl:col-span-2 md:col-span-1 min-h-[420px] md:min-h-[480px] lg:min-h-[530px] flex flex-col">
                     <BattleLog
                       logs={logs}
                       onClearLogs={() => setLogs([])}

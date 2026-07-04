@@ -128,12 +128,12 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
   const [validationError, setValidationError] = useState<string | null>(null);
   const chatConsoleRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll chat window
+  // Auto-scroll chat window container only (does not scroll page)
   useEffect(() => {
-    if (!isRed && !isIdle) {
-      chatConsoleRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (!isRed && chatConsoleRef.current) {
+      chatConsoleRef.current.scrollTop = chatConsoleRef.current.scrollHeight;
     }
-  }, [chatMessages, activeTab, isRed, isIdle]);
+  }, [chatMessages, activeTab, isRed]);
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
