@@ -1264,6 +1264,45 @@ function App() {
   // Navigation view state
   const [activeView, setActiveView] = useState<string>('dashboard');
 
+  // Interactive Demo Modal Walkthrough States
+  const [showDemoModal, setShowDemoModal] = useState(false);
+  const [demoStep, setDemoStep] = useState(0);
+  const [demoLogs, setDemoLogs] = useState<string[]>([]);
+
+  // Demo walkthrough simulator effect
+  useEffect(() => {
+    if (!showDemoModal) {
+      setDemoStep(0);
+      setDemoLogs([]);
+      return;
+    }
+    const steps = [
+      'INIT: Deploying Virtual Adversary Cluster...',
+      'SYSTEM: Firewall handshake confirmed on Node #008A.',
+      'ATTACK: Launching payload "SELECT * FROM system.credentials; --"',
+      'DEFENSE: Input Guardrail intercepted database injection match.',
+      'RESULT: Threat sanitized. Anomaly index scaled to 0.02.',
+      'ATTACK: Injecting jailbreak roleplay payload (Developer Override)',
+      'DEFENSE: Sentinel Engine blocked adversarial persona shift.',
+      'AUDIT: Generating compliance profile... Safety Index: 98.4%',
+      'COMPLETED: Evaluation report compiled successfully.'
+    ];
+
+    let current = 0;
+    setDemoLogs([steps[0]]);
+    const timer = setInterval(() => {
+      current++;
+      if (current < steps.length) {
+        setDemoStep(current);
+        setDemoLogs((prev) => [...prev, steps[current]]);
+      } else {
+        clearInterval(timer);
+      }
+    }, 1200);
+
+    return () => clearInterval(timer);
+  }, [showDemoModal]);
+
   // Global simulation state
   const [simulationStatus, setSimulationStatus] = useState<'IDLE' | 'RUNNING' | 'PAUSED' | 'FINISHED'>('IDLE');
   const [simulationSpeed, setSimulationSpeed] = useState<number>(1);
@@ -1647,18 +1686,28 @@ function App() {
                 {/* Core Concept Idea & Small Statement */}
                 <div className="relative group overflow-hidden bg-slate-950/90 backdrop-blur-md border border-slate-800 rounded-lg p-6 pl-8.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl transition-all hover:border-slate-750">
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyber-red to-cyber-blue" />
-                  <div className="space-y-2 md:max-w-[78%]">
+                  <div className="space-y-4 md:max-w-[78%]">
                     <div className="flex items-center gap-2.5 flex-wrap">
                       <span className="px-2 py-0.5 rounded-[2px] bg-cyber-blue/15 border border-cyber-blue/40 text-[9px] text-cyber-blue font-bold tracking-widest uppercase text-glow-blue animate-pulse">
                         CORE CONCEPT
                       </span>
-                      <h3 className="text-base sm:text-lg font-black text-white uppercase tracking-wider font-mono-cyber">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white uppercase tracking-widest font-mono-cyber text-glow-blue">
                         Adversarial LLM Arena Firewall Benchmarking
                       </h3>
                     </div>
                     <p className="text-sm leading-relaxed text-slate-200 font-cyber font-medium tracking-wide">
                       The Adversarial LLM Arena is a next-generation security sandbox designed to test and benchmark model resilience against malicious actors. By simulating real-time offensive injection sequences, complex roleplay jailbreaks, and token exfiltration parameters, security teams can proactively audit firewall rules and guardrails. Build and test defensive architectures to anonymize PII data leakage, prevent factual hallucinations, and compile standard-compliant compliance reports instantly.
                     </p>
+                    
+                    <div className="pt-2">
+                      <button 
+                        onClick={() => setShowDemoModal(true)}
+                        className="group relative inline-flex items-center gap-2.5 px-6 py-2.5 rounded bg-cyber-blue/10 border border-cyber-blue/40 text-xs font-mono-cyber font-black tracking-widest text-cyber-blue uppercase transition-all duration-300 hover:bg-cyber-blue/20 hover:border-cyber-blue/70 hover:text-white shadow-[0_0_15px_rgba(0,240,255,0.08)] hover:shadow-[0_0_20px_rgba(0,240,255,0.25)]"
+                      >
+                        <PlayCircle className="w-4 h-4 text-cyber-blue animate-pulse group-hover:scale-110 transition-transform" />
+                        WATCH SYSTEM DEMO
+                      </button>
+                    </div>
                   </div>
                   <div className="flex flex-row md:flex-col text-xs font-mono-cyber uppercase gap-x-5 gap-y-2 shrink-0 text-slate-400 border-t md:border-t-0 md:border-l border-slate-850 pt-3 md:pt-0 md:pl-6 w-full md:w-auto">
                     <div>Status: <span className="text-emerald-500 font-bold text-glow-blue">READY</span></div>
@@ -2040,6 +2089,102 @@ function App() {
 
           </main>
       </div>
+
+      {/* 4. Interactive Demo Walkthrough Modal */}
+      {showDemoModal && (
+        <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center z-[100] p-4 font-cyber">
+          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-lg shadow-[0_0_50px_rgba(0,240,255,0.15)] flex flex-col overflow-hidden">
+            {/* Modal Header */}
+            <div className="bg-slate-950 px-5 py-4 border-b border-slate-800/80 flex items-center justify-between font-mono-cyber">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-cyber-blue animate-pulse" />
+                <h4 className="text-sm font-black text-white uppercase tracking-wider">
+                  Sentinel Diagnostics Auto-Pilot Demo
+                </h4>
+              </div>
+              <button 
+                onClick={() => setShowDemoModal(false)}
+                className="text-xs text-slate-500 hover:text-white transition-colors"
+              >
+                [CLOSE]
+              </button>
+            </div>
+
+            {/* Modal Body: Mock Terminal Playback */}
+            <div className="p-6 bg-slate-950 flex-1 min-h-[300px] flex flex-col justify-between border-b border-slate-800/80 font-mono-cyber">
+              <div className="space-y-2.5 text-xs overflow-y-auto max-h-[260px] text-left select-none">
+                {demoLogs.map((log, idx) => (
+                  <div key={idx} className="flex gap-2.5 leading-relaxed">
+                    <span className="text-slate-600">[{idx + 1}]</span>
+                    <span className={
+                      log.startsWith('ATTACK:') ? 'text-cyber-red font-bold' :
+                      log.startsWith('DEFENSE:') ? 'text-cyber-blue font-bold' :
+                      log.startsWith('RESULT:') ? 'text-emerald-400 font-bold' :
+                      log.startsWith('COMPLETED:') ? 'text-emerald-500 font-black tracking-wider' : 'text-slate-350'
+                    }>
+                      {log}
+                    </span>
+                  </div>
+                ))}
+                {demoStep < 8 && (
+                  <div className="flex items-center gap-2 text-slate-500 italic animate-pulse">
+                    <span>Processing telemetry vector</span>
+                    <span className="flex gap-0.5"><span className="animate-bounce">.</span><span className="animate-bounce delay-100">.</span><span className="animate-bounce delay-200">.</span></span>
+                  </div>
+                )}
+              </div>
+
+              {/* Progress Indicator */}
+              <div className="mt-6 pt-4 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-500 uppercase">
+                <span>SIMULATOR STATUS: {demoStep < 8 ? 'RUNNING' : 'FINISHED'}</span>
+                <span>STEP {demoStep + 1} / 9</span>
+              </div>
+            </div>
+
+            {/* Modal Footer Controls */}
+            <div className="bg-slate-905 px-5 py-3.5 flex justify-end gap-3 font-mono-cyber">
+              {demoStep >= 8 && (
+                <button 
+                  onClick={() => {
+                    setDemoStep(0);
+                    setDemoLogs(['INIT: Deploying Virtual Adversary Cluster...']);
+                    let current = 0;
+                    const steps = [
+                      'INIT: Deploying Virtual Adversary Cluster...',
+                      'SYSTEM: Firewall handshake confirmed on Node #008A.',
+                      'ATTACK: Launching payload "SELECT * FROM system.credentials; --"',
+                      'DEFENSE: Input Guardrail intercepted database injection match.',
+                      'RESULT: Threat sanitized. Anomaly index scaled to 0.02.',
+                      'ATTACK: Injecting jailbreak roleplay payload (Developer Override)',
+                      'DEFENSE: Sentinel Engine blocked adversarial persona shift.',
+                      'AUDIT: Generating compliance profile... Safety Index: 98.4%',
+                      'COMPLETED: Evaluation report compiled successfully.'
+                    ];
+                    const timer = setInterval(() => {
+                      current++;
+                      if (current < steps.length) {
+                        setDemoStep(current);
+                        setDemoLogs((prev) => [...prev, steps[current]]);
+                      } else {
+                        clearInterval(timer);
+                      }
+                    }, 1200);
+                  }}
+                  className="px-4 py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors text-xs font-bold"
+                >
+                  REPLAY DEMO
+                </button>
+              )}
+              <button 
+                onClick={() => setShowDemoModal(false)}
+                className="px-4 py-1.5 rounded bg-cyber-blue/10 border border-cyber-blue/30 text-cyber-blue hover:bg-cyber-blue/20 hover:text-white transition-colors text-xs font-bold"
+              >
+                PROCEED TO CONSOLE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
