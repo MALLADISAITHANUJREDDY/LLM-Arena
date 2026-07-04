@@ -1255,6 +1255,44 @@ class SoundEffects {
       console.warn('Audio Context disabled or not supported:', e);
     }
   }
+
+  public static playVictory() {
+    try {
+      const ctx = this.getContext();
+      if (ctx.state === 'suspended') ctx.resume();
+      const now = ctx.currentTime;
+
+      // Define notes: frequency (Hz), duration (seconds), delay relative to "now" (seconds)
+      const notes = [
+        { freq: 523.25, dur: 0.15, time: 0.0 },  // C5
+        { freq: 659.25, dur: 0.15, time: 0.15 }, // E5
+        { freq: 783.99, dur: 0.15, time: 0.30 }, // G5
+        { freq: 1046.50, dur: 0.25, time: 0.45 },// C6
+        { freq: 783.99, dur: 0.15, time: 0.70 }, // G5
+        { freq: 1046.50, dur: 0.45, time: 0.85 } // C6 (triumphant hold!)
+      ];
+
+      notes.forEach((n) => {
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        // Retro synth style victory arpeggio chime
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(n.freq, now + n.time);
+
+        gainNode.gain.setValueAtTime(0, now + n.time);
+        gainNode.gain.linearRampToValueAtTime(0.28, now + n.time + 0.02); // quick attack
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + n.time + n.dur); // smooth decay
+
+        osc.start(now + n.time);
+        osc.stop(now + n.time + n.dur);
+      });
+    } catch (e) {
+      console.warn('Audio Context disabled or not supported:', e);
+    }
+  }
 }
 
 // ==========================================
@@ -1594,6 +1632,13 @@ function App() {
 
     return () => clearInterval(interval);
   }, [simulationStatus, simulationSpeed, handleNextStep]);
+
+  // Play victory melody when simulation completes
+  useEffect(() => {
+    if (simulationStatus === 'FINISHED') {
+      SoundEffects.playVictory();
+    }
+  }, [simulationStatus]);
 
   // Clears simulation state back to default start node
   const handleReset = () => {
