@@ -1304,42 +1304,6 @@ function App() {
 
   // Interactive Demo Modal Walkthrough States
   const [showDemoModal, setShowDemoModal] = useState(false);
-  const [demoStep, setDemoStep] = useState(0);
-  const [demoLogs, setDemoLogs] = useState<string[]>([]);
-
-  // Demo walkthrough simulator effect
-  useEffect(() => {
-    if (!showDemoModal) {
-      setDemoStep(0);
-      setDemoLogs([]);
-      return;
-    }
-    const steps = [
-      'INIT: Deploying Virtual Adversary Cluster...',
-      'SYSTEM: Firewall handshake confirmed on Node #008A.',
-      'ATTACK: Launching payload "SELECT * FROM system.credentials; --"',
-      'DEFENSE: Input Guardrail intercepted database injection match.',
-      'RESULT: Threat sanitized. Anomaly index scaled to 0.02.',
-      'ATTACK: Injecting jailbreak roleplay payload (Developer Override)',
-      'DEFENSE: Sentinel Engine blocked adversarial persona shift.',
-      'AUDIT: Generating compliance profile... Safety Index: 98.4%',
-      'COMPLETED: Evaluation report compiled successfully.'
-    ];
-
-    let current = 0;
-    setDemoLogs([steps[0]]);
-    const timer = setInterval(() => {
-      current++;
-      if (current < steps.length) {
-        setDemoStep(current);
-        setDemoLogs((prev) => [...prev, steps[current]]);
-      } else {
-        clearInterval(timer);
-      }
-    }, 1200);
-
-    return () => clearInterval(timer);
-  }, [showDemoModal]);
 
   // Global simulation state
   const [simulationStatus, setSimulationStatus] = useState<'IDLE' | 'RUNNING' | 'PAUSED' | 'FINISHED'>('IDLE');
@@ -2138,13 +2102,13 @@ function App() {
       {/* 4. Interactive Demo Walkthrough Modal */}
       {showDemoModal && (
         <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center z-[100] p-4 font-cyber">
-          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-lg shadow-[0_0_50px_rgba(0,240,255,0.15)] flex flex-col overflow-hidden">
+          <div className="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-lg shadow-[0_0_50px_rgba(0,240,255,0.15)] flex flex-col overflow-hidden">
             {/* Modal Header */}
             <div className="bg-slate-950 px-5 py-4 border-b border-slate-800/80 flex items-center justify-between font-mono-cyber">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyber-blue animate-pulse" />
                 <h4 className="text-sm font-black text-white uppercase tracking-wider">
-                  Sentinel Diagnostics Auto-Pilot Demo
+                  LLM Arena Video Walkthrough Demo
                 </h4>
               </div>
               <button 
@@ -2155,74 +2119,21 @@ function App() {
               </button>
             </div>
 
-            {/* Modal Body: Mock Terminal Playback */}
-            <div className="p-6 bg-slate-950 flex-1 min-h-[300px] flex flex-col justify-between border-b border-slate-800/80 font-mono-cyber">
-              <div className="space-y-2.5 text-xs overflow-y-auto max-h-[260px] text-left select-none">
-                {demoLogs.map((log, idx) => (
-                  <div key={idx} className="flex gap-2.5 leading-relaxed">
-                    <span className="text-slate-600">[{idx + 1}]</span>
-                    <span className={
-                      log.startsWith('ATTACK:') ? 'text-cyber-red font-bold' :
-                      log.startsWith('DEFENSE:') ? 'text-cyber-blue font-bold' :
-                      log.startsWith('RESULT:') ? 'text-emerald-400 font-bold' :
-                      log.startsWith('COMPLETED:') ? 'text-emerald-500 font-black tracking-wider' : 'text-slate-350'
-                    }>
-                      {log}
-                    </span>
-                  </div>
-                ))}
-                {demoStep < 8 && (
-                  <div className="flex items-center gap-2 text-slate-500 italic animate-pulse">
-                    <span>Processing telemetry vector</span>
-                    <span className="flex gap-0.5"><span className="animate-bounce">.</span><span className="animate-bounce delay-100">.</span><span className="animate-bounce delay-200">.</span></span>
-                  </div>
-                )}
-              </div>
-
-              {/* Progress Indicator */}
-              <div className="mt-6 pt-4 border-t border-slate-900 flex items-center justify-between text-[11px] text-slate-500 uppercase">
-                <span>SIMULATOR STATUS: {demoStep < 8 ? 'RUNNING' : 'FINISHED'}</span>
-                <span>STEP {demoStep + 1} / 9</span>
-              </div>
+            {/* Modal Body: HTML5 Video Player */}
+            <div className="bg-black flex-1 min-h-[360px] flex items-center justify-center border-b border-slate-800/80 relative">
+              <video 
+                src="/videos/Here_s_a_simple_natural_parag.mp4" 
+                controls 
+                autoPlay 
+                className="w-full h-full max-h-[420px] object-contain"
+              />
             </div>
 
             {/* Modal Footer Controls */}
             <div className="bg-slate-905 px-5 py-3.5 flex justify-end gap-3 font-mono-cyber">
-              {demoStep >= 8 && (
-                <button 
-                  onClick={() => {
-                    setDemoStep(0);
-                    setDemoLogs(['INIT: Deploying Virtual Adversary Cluster...']);
-                    let current = 0;
-                    const steps = [
-                      'INIT: Deploying Virtual Adversary Cluster...',
-                      'SYSTEM: Firewall handshake confirmed on Node #008A.',
-                      'ATTACK: Launching payload "SELECT * FROM system.credentials; --"',
-                      'DEFENSE: Input Guardrail intercepted database injection match.',
-                      'RESULT: Threat sanitized. Anomaly index scaled to 0.02.',
-                      'ATTACK: Injecting jailbreak roleplay payload (Developer Override)',
-                      'DEFENSE: Sentinel Engine blocked adversarial persona shift.',
-                      'AUDIT: Generating compliance profile... Safety Index: 98.4%',
-                      'COMPLETED: Evaluation report compiled successfully.'
-                    ];
-                    const timer = setInterval(() => {
-                      current++;
-                      if (current < steps.length) {
-                        setDemoStep(current);
-                        setDemoLogs((prev) => [...prev, steps[current]]);
-                      } else {
-                        clearInterval(timer);
-                      }
-                    }, 1200);
-                  }}
-                  className="px-4 py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-300 hover:text-white transition-colors text-xs font-bold"
-                >
-                  REPLAY DEMO
-                </button>
-              )}
               <button 
                 onClick={() => setShowDemoModal(false)}
-                className="px-4 py-1.5 rounded bg-cyber-blue/10 border border-cyber-blue/30 text-cyber-blue hover:bg-cyber-blue/20 hover:text-white transition-colors text-xs font-bold"
+                className="px-5 py-1.5 rounded bg-cyber-blue/10 border border-cyber-blue/30 text-cyber-blue hover:bg-cyber-blue/20 hover:text-white transition-colors text-xs font-bold uppercase tracking-wider"
               >
                 PROCEED TO CONSOLE
               </button>
