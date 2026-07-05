@@ -1495,15 +1495,28 @@ function App() {
       return;
     }
 
-    const isAttackerStep = Math.random() > 0.45; // Bias slightly toward attacker for active action
+    const currentStep = queriesCount;
+    const totalSteps = 50;
+
+    // Step 49 (the 50th step) is forced to be an attacker step to finish the battle.
+    // Otherwise, the attacker step probability corresponds to the compromise rate (1 - safetyIndex).
+    const isAttackerStep = currentStep >= totalSteps - 1 || Math.random() > (safetyProfile.safetyIndex / 100);
 
     if (isAttackerStep) {
       // Attacker (Red) Actions
       SoundEffects.playAttack();
       const attack = redAttacks[Math.floor(Math.random() * redAttacks.length)];
-      const baseDamage = Math.floor(Math.random() * 16) + 10; // 10-25 damage
-      const modifier = (100 - safetyProfile.safetyIndex) / 22; // baseline modifier scaled to 78% custom key
-      const damage = Math.max(1, Math.round(baseDamage * modifier));
+      
+      let damage = 0;
+      if (currentStep >= totalSteps - 1) {
+        // Final blow to end the simulation
+        damage = blueShield + blueHealth;
+      } else {
+        // Normal attack: guide shield and health to the target decay curve
+        const targetTotal = Math.max(4, Math.round(200 * (1 - (currentStep + 1) / totalSteps)));
+        const currentTotal = blueShield + blueHealth;
+        damage = Math.max(1, currentTotal - targetTotal + Math.floor(Math.random() * 7) - 3);
+      }
       
       setQueriesCount((prev) => prev + 1);
       setRedActiveAction(attack.type);
@@ -1519,12 +1532,18 @@ function App() {
       let finalHealth = blueHealth;
 
       if (blueShield > 0) {
-        finalShield = Math.max(0, blueShield - damage);
-        setBlueShield(finalShield);
+        if (damage <= blueShield) {
+          finalShield = blueShield - damage;
+        } else {
+          finalShield = 0;
+          finalHealth = Math.max(0, blueHealth - (damage - blueShield));
+        }
       } else {
         finalHealth = Math.max(0, blueHealth - damage);
-        setBlueHealth(finalHealth);
       }
+
+      setBlueShield(finalShield);
+      setBlueHealth(finalHealth);
 
       // Append logs
       const newLog: LogItem = {
@@ -1538,7 +1557,7 @@ function App() {
 
       setLogs((prev) => [...prev, newLog]);
 
-      if (finalHealth <= 0) {
+      if (finalHealth <= 0 || currentStep >= totalSteps - 1) {
         setSimulationStatus('FINISHED');
         setLogs((prev) => [
           ...prev,
@@ -1583,13 +1602,23 @@ function App() {
 
       setLogs((prev) => [...prev, newLog]);
     }
-  }, [redHealth, blueHealth, blueShield, safetyProfile.safetyIndex]);
+  }, [redHealth, blueHealth, blueShield, safetyProfile.safetyIndex, queriesCount]);
 
   // Handle simulation run loops
   useEffect(() => {
     if (simulationStatus !== 'RUNNING') return;
 
-    const intervalTime = 1200 / simulationSpeed;
+    let intervalTime = 1200;
+    if (simulationSpeed === 1) {
+      intervalTime = 1200; // 50 steps * 1.2s = 60s (1min)
+    } else if (simulationSpeed === 2) {
+      intervalTime = 600;  // 50 steps * 0.6s = 30s
+    } else if (simulationSpeed === 5) {
+      intervalTime = 200;  // 50 steps * 0.2s = 10s
+    } else {
+      intervalTime = 1200 / simulationSpeed;
+    }
+
     const interval = setInterval(() => {
       handleNextStep();
     }, intervalTime);
@@ -1780,6 +1809,7 @@ function App() {
                         queriesCount={queriesCount}
                         blockedCount={blockedCount}
                         onSimulateAttack={handleSimulateAttack}
+                        speed={simulationSpeed}
                       />
                     )}
                   </div>
