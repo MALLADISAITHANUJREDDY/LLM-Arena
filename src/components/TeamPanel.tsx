@@ -218,41 +218,41 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
   };
 
   return (
-    <div className={`flex flex-col h-full p-5 gap-5 ${panelClass}`}>
+    <div className={`flex flex-col h-full p-4 gap-3 ${panelClass}`}>
       {/* Title Header with Side Label */}
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 font-mono-cyber">
-        <div className="flex items-center gap-2.5">
+      <div className="flex items-start justify-between border-b border-slate-800/80 pb-2.5 font-mono-cyber gap-2 shrink-0">
+        <div className="flex items-center gap-2 min-w-0">
           {isRed ? (
-            <Flame className="w-5 h-5 text-cyber-red animate-pulse" />
+            <Flame className="w-4 h-4 text-cyber-red animate-pulse shrink-0" />
           ) : (
-            <Shield className="w-5 h-5 text-cyber-blue" />
+            <Shield className="w-4 h-4 text-cyber-blue shrink-0" />
           )}
-          <div>
-            <h2 className={`text-base font-black tracking-widest uppercase ${isRed ? 'text-cyber-red text-glow-red' : 'text-cyber-blue text-glow-blue'}`}>
+          <div className="min-w-0">
+            <h2 className={`text-base font-black tracking-wide leading-tight whitespace-nowrap ${isRed ? 'text-cyber-red text-glow-red' : 'text-cyber-blue text-glow-blue'}`}>
               {isRed ? 'RED TEAM // ATTACKER' : 'BLUE TEAM // DEFENDER'}
             </h2>
-            <p className="text-[11px] text-slate-400 uppercase tracking-wider">
-              AI Security Simulation node
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest whitespace-nowrap">
+              AI Security Simulation Node
             </p>
           </div>
         </div>
-        <div className={`px-2 py-0.5 rounded text-[11px] font-bold border ${isRed ? 'bg-cyber-red/20 text-cyber-red border-cyber-red/40' : 'bg-cyber-blue/20 text-cyber-blue border-cyber-blue/40'}`}>
+        <div className={`px-2 py-0.5 rounded text-[10px] font-black border shrink-0 tracking-widest ${isRed ? 'bg-cyber-red/20 text-cyber-red border-cyber-red/40' : 'bg-cyber-blue/20 text-cyber-blue border-cyber-blue/40'}`}>
           {isRed ? 'ATTACK' : 'DEFEND'}
         </div>
       </div>
 
       {/* Model Spec Details */}
-      <div className="p-3 rounded bg-slate-950/80 border border-slate-800/85 relative overflow-hidden">
+      <div className="p-2.5 rounded bg-slate-950/80 border border-slate-800/85 relative overflow-hidden shrink-0">
         <div className="flex items-center gap-3 font-mono-cyber">
-          <div className={`p-2.5 rounded bg-slate-900 border ${accentBorder} flex items-center justify-center`}>
-            <Brain className={`w-5 h-5 ${accentColor}`} />
+          <div className={`p-2 rounded bg-slate-900 border ${accentBorder} flex items-center justify-center shrink-0`}>
+            <Brain className={`w-4 h-4 ${accentColor}`} />
           </div>
-          <div>
-            <h3 className="text-sm font-black text-slate-100 uppercase tracking-wide">{modelName}</h3>
-            <div className="flex gap-2.5 text-[11px] text-slate-400 font-bold">
-              <span>PARAMS: <strong className="text-slate-200">{parameters}</strong></span>
-              <span>•</span>
-              <span>NODE ID: <strong className="text-slate-200">#00{isRed ? '8A' : '9F'}</strong></span>
+          <div className="min-w-0">
+            <h3 className="text-sm font-black text-slate-100 uppercase tracking-wide truncate">{modelName}</h3>
+            <div className="flex flex-wrap gap-x-2 gap-y-0 text-[10px] text-slate-400 font-bold mt-0.5">
+              <span className="whitespace-nowrap">PARAMS: <strong className="text-slate-200">{parameters}</strong></span>
+              <span className="text-slate-700">•</span>
+              <span className="whitespace-nowrap">NODE: <strong className="text-slate-200">#00{isRed ? '8A' : '9F'}</strong></span>
             </div>
           </div>
         </div>
@@ -260,12 +260,12 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
 
       {/* Red Team Attack Cards or Blue Team Stats Section */}
       {isRed ? (
-        <div className="flex-1 flex flex-col gap-2.5 font-mono-cyber">
-          <div className="flex items-center justify-between text-xs text-slate-300 border-b border-slate-900 pb-1.5 uppercase font-bold">
-            <span>SELECT ATTACK VECTOR</span>
-            <span className="text-[10px] text-slate-400 font-normal">ONE ACTIVE</span>
+        <div className="flex-1 flex flex-col gap-2 font-mono-cyber min-h-0">
+          <div className="flex items-center justify-between border-b border-slate-900 pb-1.5 shrink-0">
+            <span className="text-xs font-black text-slate-200 uppercase tracking-wide">Select Attack Vector</span>
+            <span className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">One Active</span>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5 overflow-y-auto flex-1 pr-0.5">
             {attackCards.map((card) => {
               const isActive = activeAction === card.name;
               const styles = getSeverityStyle(card.severity, isActive);
@@ -275,22 +275,22 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
                 <motion.button
                   key={card.name}
                   onClick={() => onSelectAttack && onSelectAttack(card.name)}
-                  whileHover={{ scale: 1.015 }}
-                  whileTap={{ scale: 0.985 }}
-                  className={`w-full text-left p-2.5 rounded border transition-all flex flex-col gap-1.5 cursor-pointer ${styles.border}`}
+                  whileHover={{ scale: 1.012 }}
+                  whileTap={{ scale: 0.988 }}
+                  className={`w-full text-left px-2.5 py-2 rounded border transition-all flex flex-col gap-1 cursor-pointer shrink-0 ${styles.border}`}
                 >
-                  <div className="flex justify-between items-center w-full">
-                    <div className="flex items-center gap-2">
+                  <div className="flex justify-between items-center w-full gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
                       <CardIcon className={`w-3.5 h-3.5 shrink-0 ${isActive ? styles.color : 'text-slate-400'}`} />
-                      <h4 className={`text-xs font-bold transition-colors ${isActive ? 'text-white' : 'text-slate-200'}`}>
+                      <h4 className={`text-xs font-bold leading-tight transition-colors truncate ${isActive ? 'text-white' : 'text-slate-200'}`}>
                         {card.name}
                       </h4>
                     </div>
-                    <span className={`px-1.5 py-0.5 rounded-[2px] text-[8px] font-bold uppercase tracking-wider ${styles.tagBg}`}>
+                    <span className={`px-1.5 py-0.5 rounded-[2px] text-[8px] font-bold uppercase tracking-wider shrink-0 ${styles.tagBg}`}>
                       {card.severity}
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-400 leading-tight font-sans">
+                  <p className="text-[10px] text-slate-400 leading-tight font-sans pl-5">
                     {card.description}
                   </p>
                 </motion.button>
@@ -303,11 +303,11 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
         <div className="space-y-4 font-mono-cyber">
           {/* Animated Health Bar */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-300 font-bold uppercase flex items-center gap-1.5">
-                <Activity className="w-3.5 h-3.5" /> Integrity
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-black text-slate-200 uppercase tracking-wide flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-cyber-blue" /> Integrity
               </span>
-              <span className="font-bold text-cyber-blue text-sm">
+              <span className="font-black text-cyber-blue text-base">
                 {health}%
               </span>
             </div>
@@ -328,11 +328,11 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
 
           {/* Animated Shield Bar */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-300 font-bold uppercase flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5" /> Defense Shield
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-black text-slate-200 uppercase tracking-wide flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-cyber-blue" /> Defense Shield
               </span>
-              <span className="font-bold text-cyber-blue text-sm">
+              <span className="font-black text-cyber-blue text-base">
                 {shield}%
               </span>
             </div>
@@ -355,11 +355,11 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
           <div className="flex-1 flex flex-col gap-3 font-mono-cyber min-h-0 bg-slate-950/80 border border-slate-900 rounded p-4 relative overflow-hidden justify-between">
             <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-blue" />
             
-            <div className="border-b border-slate-900 pb-1.5 shrink-0">
-              <h3 className="text-sm font-black uppercase text-cyber-blue text-glow-blue flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5" /> API & CHATBOT CONNECTOR
+            <div className="border-b border-slate-900 pb-2 shrink-0">
+              <h3 className="text-base font-black uppercase text-cyber-blue text-glow-blue flex items-center gap-2">
+                <Layers className="w-4 h-4 shrink-0" /> API & CHATBOT CONNECTOR
               </h3>
-              <p className="text-[10px] text-slate-400 uppercase mt-0.5 leading-none">
+              <p className="text-[11px] text-slate-400 uppercase mt-1 leading-none tracking-wider">
                 Configure defensive endpoint before combat
               </p>
             </div>
@@ -491,6 +491,80 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
               </span>
             </div>
 
+            {/* ── Always-visible API Credentials Strip ── */}
+            <div className="shrink-0 bg-slate-950/90 border border-cyber-blue/20 rounded p-2.5 space-y-2 relative overflow-hidden">
+              {/* Top-left corner accent */}
+              <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-cyber-blue/60" />
+              <div className="flex items-center gap-1.5 mb-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyber-blue animate-pulse" />
+                <span className="text-[9px] text-cyber-blue font-black uppercase tracking-widest">API Credentials</span>
+                <span className={`ml-auto px-1.5 py-0.5 rounded text-[8px] font-bold border ${
+                  connectionStatus === 'CONNECTED'
+                    ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                    : connectionStatus === 'CONNECTING'
+                    ? 'bg-amber-500/15 text-amber-400 border-amber-500/30 animate-pulse'
+                    : 'bg-cyber-red/15 text-cyber-red border-cyber-red/30'
+                }`}>
+                  {connectionStatus}
+                </span>
+              </div>
+
+              {/* API Endpoint */}
+              <div className="space-y-0.5">
+                <label className="text-[8px] text-slate-400 uppercase font-bold tracking-wider block">
+                  Website / API URL
+                </label>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    value={apiLink}
+                    onChange={(e) => { setApiLink(e.target.value); setValidationError(null); }}
+                    placeholder="https://api.your-llm.com/v1"
+                    className="flex-1 bg-slate-900 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-200 focus:border-cyber-blue outline-none transition-colors font-sans placeholder-slate-600"
+                  />
+                </div>
+              </div>
+
+              {/* API Key */}
+              <div className="space-y-0.5">
+                <label className="text-[8px] text-slate-400 uppercase font-bold tracking-wider block">
+                  API Secret Key
+                </label>
+                <div className="flex gap-1.5">
+                  <input
+                    type="password"
+                    value={apiKey}
+                    onChange={(e) => { setApiKey(e.target.value); setValidationError(null); }}
+                    placeholder="sk-..."
+                    className="flex-1 bg-slate-900 border border-slate-800 rounded px-2 py-1 text-[10px] text-slate-200 focus:border-cyber-blue outline-none transition-colors font-sans placeholder-slate-600"
+                  />
+                  <button
+                    onClick={handleTestConnection}
+                    disabled={connectionStatus === 'CONNECTING'}
+                    title="Reconnect node"
+                    className="px-2.5 py-1 rounded bg-cyber-blue/15 text-cyber-blue border border-cyber-blue/35 hover:bg-cyber-blue/30 text-[9px] font-black uppercase tracking-wider cursor-pointer transition-all active:scale-95 disabled:opacity-50 shrink-0"
+                  >
+                    {connectionStatus === 'CONNECTING' ? '...' : 'CONNECT'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Inline error */}
+              <AnimatePresence>
+                {validationError && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="text-[9px] text-cyber-red flex items-start gap-1 leading-snug font-mono-cyber"
+                  >
+                    <AlertTriangle className="w-3 h-3 shrink-0 mt-0.5" />
+                    <span>{validationError}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {activeTab === 'schemas' ? (
               /* Defensive Schemas List */
               <div className="flex-1 overflow-y-auto space-y-2 pr-1">
@@ -520,7 +594,7 @@ export const TeamPanel: React.FC<TeamPanelProps> = ({
               /* Interactive Chatbot Panel */
               <div className="flex-1 flex flex-col bg-slate-950/80 border border-slate-900/60 rounded p-2 min-h-0 justify-between gap-2.5">
                 {/* Messages display area */}
-                <div ref={chatConsoleRef} className="flex-1 overflow-y-auto space-y-2 pr-1 text-[11px] max-h-[145px]">
+                <div ref={chatConsoleRef} className="flex-1 overflow-y-auto space-y-2 pr-1 text-[11px] max-h-[100px]">
                   {chatMessages.map((msg, idx) => {
                     const isSys = msg.sender === 'system';
                     const isUser = msg.sender === 'user';

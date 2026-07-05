@@ -29,7 +29,6 @@ const Sparkle = ({
   startX: number; startY: number; endX: number; endY: number;
   arcY: number; delay: number; size: number; duration: number;
 }) => {
-  // We animate the cx/cy ourselves via keyframes using motion.g
   return (
     <motion.g
       initial={{ opacity: 0 }}
@@ -38,7 +37,7 @@ const Sparkle = ({
         x: [startX, (startX + endX) / 2, endX],
         y: [startY, arcY, endY],
         rotate: [0, 180, 360],
-        scale: [0.5, 1.2, 0.8],
+        scale: [0.4, 1.4, 0.9],
       }}
       transition={{
         duration,
@@ -49,7 +48,37 @@ const Sparkle = ({
     >
       <StarShape size={size} />
       {/* Electric glow ring */}
-      <circle r={size * 1.8} fill="none" stroke="#ff0033" strokeWidth="0.6" opacity="0.45" />
+      <circle r={size * 2.2} fill="none" stroke="#ff0033" strokeWidth="0.8" opacity="0.5" />
+      {/* Inner hot core */}
+      <circle r={size * 0.6} fill="#ffaa00" opacity="0.9" />
+    </motion.g>
+  );
+};
+
+// ── Fire particle rising upward ────────────────────────────────────────────
+const FireParticle = ({
+  cx, cy, delay, size, duration, color,
+}: {
+  cx: number; cy: number; delay: number; size: number; duration: number; color: string;
+}) => {
+  const riseY = cy - 20 - Math.random() * 15;
+  return (
+    <motion.g
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: [0, 0.95, 0.7, 0],
+        y: [0, -(size * 3), -(size * 7)],
+        x: [0, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 14],
+        scale: [0.3, 1.1, 0.1],
+      }}
+      transition={{ duration, delay, ease: 'easeOut' }}
+    >
+      {/* Flame teardrop */}
+      <ellipse cx={cx} cy={cy} rx={size * 0.7} ry={size * 1.4} fill={color} opacity="0.9" />
+      {/* Hot inner core */}
+      <ellipse cx={cx} cy={cy + size * 0.3} rx={size * 0.35} ry={size * 0.7} fill="#fff5aa" opacity="0.8" />
+      {/* Outer glow halo */}
+      <ellipse cx={cx} cy={cy} rx={size * 1.4} ry={size * 2.2} fill={color} opacity="0.2" />
     </motion.g>
   );
 };
@@ -157,16 +186,47 @@ export const Arena: React.FC<ArenaProps> = ({
   // Animation durations scaled to simulation speed
   const animDuration = speed === 5 ? 0.22 : speed === 2 ? 0.50 : 0.90;
 
-  // Sparkle definitions – 8 particles in staggered arcs
+  // Sparkle definitions – 20 particles in 3 staggered waves
   const sparkles = [
-    { id: 's1', startX: -15, startY: 78,  endX: 215, endY: 82,  arcY: 65,  delay: 0.00, size: 3.5 },
-    { id: 's2', startX: -15, startY: 92,  endX: 215, endY: 98,  arcY: 108, delay: 0.06, size: 2.8 },
-    { id: 's3', startX: -15, startY: 100, endX: 215, endY: 104, arcY: 88,  delay: 0.03, size: 4.5 },
-    { id: 's4', startX: -15, startY: 112, endX: 215, endY: 118, arcY: 124, delay: 0.10, size: 2.2 },
-    { id: 's5', startX: -15, startY: 86,  endX: 215, endY: 90,  arcY: 75,  delay: 0.15, size: 3.0 },
-    { id: 's6', startX: -15, startY: 118, endX: 215, endY: 110, arcY: 130, delay: 0.08, size: 2.5 },
-    { id: 's7', startX: -15, startY: 96,  endX: 215, endY: 100, arcY: 84,  delay: 0.18, size: 3.8 },
-    { id: 's8', startX: -15, startY: 104, endX: 215, endY: 108, arcY: 116, delay: 0.13, size: 2.0 },
+    // Wave 1 – main beam
+    { id: 's1',  startX: -15, startY: 78,  endX: 215, endY: 82,  arcY: 62,  delay: 0.00, size: 4.5 },
+    { id: 's2',  startX: -15, startY: 92,  endX: 215, endY: 98,  arcY: 110, delay: 0.05, size: 3.5 },
+    { id: 's3',  startX: -15, startY: 100, endX: 215, endY: 104, arcY: 86,  delay: 0.02, size: 6.0 },
+    { id: 's4',  startX: -15, startY: 112, endX: 215, endY: 118, arcY: 126, delay: 0.08, size: 3.0 },
+    { id: 's5',  startX: -15, startY: 86,  endX: 215, endY: 90,  arcY: 72,  delay: 0.14, size: 4.0 },
+    { id: 's6',  startX: -15, startY: 118, endX: 215, endY: 112, arcY: 132, delay: 0.07, size: 3.2 },
+    { id: 's7',  startX: -15, startY: 96,  endX: 215, endY: 100, arcY: 80,  delay: 0.17, size: 5.0 },
+    { id: 's8',  startX: -15, startY: 106, endX: 215, endY: 110, arcY: 118, delay: 0.11, size: 2.8 },
+    // Wave 2 – diagonal cross-fire
+    { id: 's9',  startX: -15, startY: 70,  endX: 215, endY: 130, arcY: 90,  delay: 0.12, size: 3.8 },
+    { id: 's10', startX: -15, startY: 130, endX: 215, endY: 70,  arcY: 100, delay: 0.16, size: 3.2 },
+    { id: 's11', startX: -15, startY: 75,  endX: 215, endY: 125, arcY: 85,  delay: 0.04, size: 4.2 },
+    { id: 's12', startX: -15, startY: 125, endX: 215, endY: 75,  arcY: 95,  delay: 0.09, size: 2.6 },
+    // Wave 3 – scattered burst
+    { id: 's13', startX: -15, startY: 84,  endX: 215, endY: 88,  arcY: 58,  delay: 0.22, size: 3.0 },
+    { id: 's14', startX: -15, startY: 116, endX: 215, endY: 120, arcY: 138, delay: 0.25, size: 2.4 },
+    { id: 's15', startX: -15, startY: 94,  endX: 215, endY: 96,  arcY: 74,  delay: 0.20, size: 5.5 },
+    { id: 's16', startX: -15, startY: 108, endX: 215, endY: 114, arcY: 122, delay: 0.28, size: 2.0 },
+    { id: 's17', startX: -15, startY: 88,  endX: 215, endY: 84,  arcY: 68,  delay: 0.30, size: 3.6 },
+    { id: 's18', startX: -15, startY: 102, endX: 215, endY: 106, arcY: 92,  delay: 0.33, size: 4.8 },
+    { id: 's19', startX: -15, startY: 82,  endX: 215, endY: 78,  arcY: 60,  delay: 0.36, size: 2.2 },
+    { id: 's20', startX: -15, startY: 120, endX: 215, endY: 116, arcY: 140, delay: 0.18, size: 3.4 },
+  ];
+
+  // Fire particle definitions – 12 flames rising at the impact zone
+  const fireParticles = [
+    { id: 'f1',  cx: 190, cy: 108, delay: 0.40, size: 5,   color: '#ff2200' },
+    { id: 'f2',  cx: 196, cy: 100, delay: 0.42, size: 7,   color: '#ff4400' },
+    { id: 'f3',  cx: 192, cy: 92,  delay: 0.45, size: 4.5, color: '#ff6600' },
+    { id: 'f4',  cx: 200, cy: 105, delay: 0.38, size: 6,   color: '#ff2200' },
+    { id: 'f5',  cx: 185, cy: 96,  delay: 0.48, size: 5.5, color: '#ff3300' },
+    { id: 'f6',  cx: 202, cy: 95,  delay: 0.50, size: 4,   color: '#ff7700' },
+    { id: 'f7',  cx: 188, cy: 112, delay: 0.43, size: 5,   color: '#ff1100' },
+    { id: 'f8',  cx: 198, cy: 88,  delay: 0.52, size: 3.5, color: '#ff5500' },
+    { id: 'f9',  cx: 193, cy: 116, delay: 0.46, size: 6.5, color: '#ff2200' },
+    { id: 'f10', cx: 205, cy: 102, delay: 0.55, size: 4.5, color: '#ff4400' },
+    { id: 'f11', cx: 184, cy: 104, delay: 0.58, size: 5,   color: '#ff3300' },
+    { id: 'f12', cx: 197, cy: 115, delay: 0.60, size: 3.8, color: '#ff6600' },
   ];
 
   // Bubble definitions – scattered around center
@@ -310,34 +370,37 @@ export const Arena: React.FC<ArenaProps> = ({
             transition={{ type: 'spring', stiffness: 85, damping: 15 }}
           />
 
-          {/* ══ 4. RED ATTACK: Electric Sparkle Storm ════════════════════════ */}
+          {/* ══ 4. RED ATTACK: Electric Sparkle + Fire Storm ══════════════════ */}
           <AnimatePresence>
             {isRedAttack && (
               <g key={`sparkle-burst-${activeAttack!.timestamp}`} filter="url(#sparkle-glow)">
-                {/* Background red flash */}
+                {/* Intense red background flash */}
                 <motion.rect
                   x="-20" y="-20" width="240" height="240"
                   fill="url(#red-flash)"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0.5, 0] }}
+                  animate={{ opacity: [0, 1, 0.8, 0.4, 0] }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: animDuration * 0.6, ease: 'easeOut' }}
+                  transition={{ duration: animDuration * 0.8, ease: 'easeOut' }}
                 />
 
-                {/* Horizontal laser beam */}
-                <motion.line
-                  x1="-20" y1="100" x2="220" y2="100"
-                  stroke="#ff0033"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 3"
-                  initial={{ opacity: 0, scaleX: 0 }}
-                  animate={{ opacity: [0, 0.8, 0], scaleX: 1 }}
-                  exit={{ opacity: 0 }}
-                  style={{ originX: '0px', originY: '0px' }}
-                  transition={{ duration: animDuration, ease: 'easeOut' }}
-                />
+                {/* 3 Laser beams at different heights */}
+                {[92, 100, 108].map((y, idx) => (
+                  <motion.line
+                    key={`laser-${idx}`}
+                    x1="-20" y1={y} x2="220" y2={y}
+                    stroke={idx === 1 ? '#ff0033' : '#ff4400'}
+                    strokeWidth={idx === 1 ? 2.5 : 1.2}
+                    strokeDasharray={idx === 1 ? '6 3' : '3 4'}
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    animate={{ opacity: [0, 1, 0.9, 0], scaleX: 1 }}
+                    exit={{ opacity: 0 }}
+                    style={{ originX: '0px', originY: '0px' }}
+                    transition={{ duration: animDuration, delay: idx * 0.04, ease: 'easeOut' }}
+                  />
+                ))}
 
-                {/* Sparkle particles */}
+                {/* 20 Sparkle particles */}
                 {sparkles.map((s) => (
                   <Sparkle
                     key={s.id}
@@ -352,22 +415,55 @@ export const Arena: React.FC<ArenaProps> = ({
                   />
                 ))}
 
-                {/* Impact explosion at right side */}
+                {/* 12 Fire particles rising at impact */}
+                {fireParticles.map((f) => (
+                  <FireParticle
+                    key={f.id}
+                    cx={f.cx}
+                    cy={f.cy}
+                    delay={f.delay * (animDuration / 0.9)}
+                    size={f.size}
+                    duration={animDuration * 0.75}
+                    color={f.color}
+                  />
+                ))}
+
+                {/* Impact explosion rings x3 */}
+                {[14, 22, 32].map((r, idx) => (
+                  <motion.circle
+                    key={`ring-${idx}`}
+                    cx="195" cy="100" r={r}
+                    fill="none"
+                    stroke={idx === 0 ? '#ff0033' : idx === 1 ? '#ff4400' : '#ff7700'}
+                    strokeWidth={2.5 - idx * 0.5}
+                    initial={{ scale: 0.1, opacity: 1 }}
+                    animate={{ scale: [0.1, 1.6], opacity: [1, 0] }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: animDuration * 0.7,
+                      delay: animDuration * 0.45 + idx * 0.06,
+                      ease: 'easeOut',
+                    }}
+                  />
+                ))}
+
+                {/* Hot impact core */}
                 <motion.circle
-                  cx="195" cy="100" r="14"
-                  fill="none" stroke="#ff2244" strokeWidth="2"
+                  cx="195" cy="100" r="10"
+                  fill="#ff5500"
                   initial={{ scale: 0.2, opacity: 0.9 }}
-                  animate={{ scale: [0.2, 1.4], opacity: [0.9, 0] }}
+                  animate={{ scale: [0.2, 2.0], opacity: [0.9, 0] }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: animDuration * 0.7, delay: animDuration * 0.5, ease: 'easeOut' }}
+                  transition={{ duration: animDuration * 0.8, delay: animDuration * 0.50, ease: 'easeOut' }}
                 />
+                {/* White hot inner core */}
                 <motion.circle
-                  cx="195" cy="100" r="8"
-                  fill="#ff0033" opacity="0.3"
-                  initial={{ scale: 0.2, opacity: 0.7 }}
-                  animate={{ scale: [0.2, 1.8], opacity: [0.7, 0] }}
+                  cx="195" cy="100" r="5"
+                  fill="#ffffff"
+                  initial={{ scale: 0.5, opacity: 1 }}
+                  animate={{ scale: [0.5, 1.2, 0], opacity: [1, 0.8, 0] }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: animDuration * 0.9, delay: animDuration * 0.55, ease: 'easeOut' }}
+                  transition={{ duration: animDuration * 0.5, delay: animDuration * 0.48, ease: 'easeOut' }}
                 />
               </g>
             )}
