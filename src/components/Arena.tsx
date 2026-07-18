@@ -61,7 +61,6 @@ const FireParticle = ({
 }: {
   cx: number; cy: number; delay: number; size: number; duration: number; color: string;
 }) => {
-  const riseY = cy - 20 - Math.random() * 15;
   return (
     <motion.g
       initial={{ opacity: 0 }}

@@ -16,13 +16,19 @@ import {
   TrendingUp,
   ShieldX,
   FileText,
-  Zap
+  Zap,
+  Image as ImageIcon,
+  Globe,
+  Trophy
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { TeamPanel } from './components/TeamPanel';
 import { Arena } from './components/Arena';
 import { BattleLog } from './components/BattleLog';
 import type { LogItem } from './components/BattleLog';
+import { ImageBattle } from './components/ImageBattle';
+import { PublicBattles } from './components/PublicBattles';
+import { Leaderboard } from './components/Leaderboard';
 
 // ==========================================
 // 1. Sidebar Component
@@ -35,6 +41,9 @@ interface SidebarProps {
 function Sidebar({ activeView, onChangeView }: SidebarProps) {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { id: 'image-battle', icon: ImageIcon, label: 'Image Battle' },
+    { id: 'public-battles', icon: Globe, label: 'Public Battles' },
+    { id: 'leaderboard', icon: Trophy, label: 'Leaderboard' },
     { id: 'sandbox', icon: Cpu, label: 'LLM Sandboxes' },
     { id: 'threats', icon: ShieldAlert, label: 'Threat Intel' },
     { id: 'logs', icon: Terminal, label: 'Console Logs' },
@@ -124,7 +133,7 @@ function Sidebar({ activeView, onChangeView }: SidebarProps) {
             >
               <Icon className="w-5 h-5" />
               <span className="text-[8px] uppercase tracking-wider mt-1 font-bold font-mono-cyber">
-                {item.id === 'dashboard' ? 'Dash' : item.id === 'sandbox' ? 'Play' : item.id === 'threats' ? 'Threat' : item.id === 'logs' ? 'Logs' : item.id === 'analytics' ? 'Charts' : 'Config'}
+                {item.id === 'dashboard' ? 'Dash' : item.id === 'image-battle' ? 'Vision' : item.id === 'public-battles' ? 'Public' : item.id === 'leaderboard' ? 'Ranks' : item.id === 'sandbox' ? 'Play' : item.id === 'threats' ? 'Threat' : item.id === 'logs' ? 'Logs' : item.id === 'analytics' ? 'Charts' : 'Config'}
               </span>
             </button>
           );
@@ -1302,6 +1311,46 @@ function App() {
   // Navigation view state
   const [activeView, setActiveView] = useState<string>('dashboard');
 
+  // User credits & predictions global state
+  const [credits, setCredits] = useState<number>(() => {
+    const stored = localStorage.getItem('llm-arena-credits');
+    return stored ? parseInt(stored) : 1200;
+  });
+  const [correctPredictions, setCorrectPredictions] = useState<number>(() => {
+    const stored = localStorage.getItem('llm-arena-correct-preds');
+    return stored ? parseInt(stored) : 4;
+  });
+  const [totalPredictions, setTotalPredictions] = useState<number>(() => {
+    const stored = localStorage.getItem('llm-arena-total-preds');
+    return stored ? parseInt(stored) : 6;
+  });
+
+  const handleAwardCredits = (amount: number, isCorrectPrediction: boolean) => {
+    setCredits(prev => {
+      const next = Math.max(0, prev + amount);
+      localStorage.setItem('llm-arena-credits', next.toString());
+      return next;
+    });
+    if (amount > 0 || isCorrectPrediction) {
+      setCorrectPredictions(prev => {
+        const next = prev + 1;
+        localStorage.setItem('llm-arena-correct-preds', next.toString());
+        return next;
+      });
+      setTotalPredictions(prev => {
+        const next = prev + 1;
+        localStorage.setItem('llm-arena-total-preds', next.toString());
+        return next;
+      });
+    } else if (amount < 0) {
+      setTotalPredictions(prev => {
+        const next = prev + 1;
+        localStorage.setItem('llm-arena-total-preds', next.toString());
+        return next;
+      });
+    }
+  };
+
   // Interactive Demo Modal Walkthrough States
   const [showDemoModal, setShowDemoModal] = useState(false);
 
@@ -1714,6 +1763,8 @@ function App() {
           onToggleStatus={handleToggleStatus}
           onReset={handleReset}
           onChangeSpeed={setSimulationSpeed}
+          credits={credits}
+          correctPredictions={correctPredictions}
         />
 
         {/* Layout container */}
@@ -1878,6 +1929,23 @@ function App() {
               </>
             )}
 
+            {activeView === 'image-battle' && <ImageBattle />}
+            {activeView === 'public-battles' && (
+              <PublicBattles
+                credits={credits}
+                correctPredictions={correctPredictions}
+                totalPredictions={totalPredictions}
+                onAwardCredits={handleAwardCredits}
+              />
+            )}
+            {activeView === 'leaderboard' && (
+              <Leaderboard
+                credits={credits}
+                correctPredictions={correctPredictions}
+                totalPredictions={totalPredictions}
+                onAwardCredits={handleAwardCredits}
+              />
+            )}
             {activeView === 'sandbox' && <SandboxView />}
             {activeView === 'threats' && <ThreatsView />}
             {activeView === 'logs' && <ExpandedLogsView logs={logs} onClearLogs={() => setLogs([])} />}
@@ -2077,18 +2145,33 @@ function App() {
                       </button>
                     </li>
                     <li>
+                      <button onClick={() => setActiveView('image-battle')} className="hover:text-cyber-blue transition-colors">
+                        [02] VISION IMAGE BATTLE
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => setActiveView('public-battles')} className="hover:text-cyber-blue transition-colors">
+                        [03] PUBLIC LLM BATTLES
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={() => setActiveView('leaderboard')} className="hover:text-cyber-blue transition-colors">
+                        [04] LEADERBOARD RANKS
+                      </button>
+                    </li>
+                    <li>
                       <button onClick={() => setActiveView('sandbox')} className="hover:text-cyber-blue transition-colors">
-                        [02] SANDBOX PROFILE
+                        [05] SANDBOX PROFILE
                       </button>
                     </li>
                     <li>
                       <button onClick={() => setActiveView('threats')} className="hover:text-cyber-blue transition-colors">
-                        [03] THREAT INTEL DATABASE
+                        [06] THREAT INTEL DATABASE
                       </button>
                     </li>
                     <li>
                       <button onClick={() => setActiveView('logs')} className="hover:text-cyber-blue transition-colors">
-                        [04] HISTORICAL RUN LOGS
+                        [07] HISTORICAL RUN LOGS
                       </button>
                     </li>
                   </ul>

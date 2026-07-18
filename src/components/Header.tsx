@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, RotateCcw, Cpu, ShieldCheck, Zap } from 'lucide-react';
+import { Play, Pause, RotateCcw, Cpu, ShieldCheck, Zap, Coins, Trophy } from 'lucide-react';
 
 interface HeaderProps {
   status: 'IDLE' | 'RUNNING' | 'PAUSED' | 'FINISHED';
@@ -7,6 +7,8 @@ interface HeaderProps {
   onToggleStatus: () => void;
   onReset: () => void;
   onChangeSpeed: (speed: number) => void;
+  credits?: number;
+  correctPredictions?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -15,6 +17,8 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleStatus,
   onReset,
   onChangeSpeed,
+  credits = 500,
+  correctPredictions = 0,
 }) => {
   return (
     <header className="relative w-full border-b border-slate-800 bg-slate-950/80 backdrop-blur-md px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 z-10">
@@ -40,7 +44,24 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Middle section: System Stats Grid */}
-      <div className="hidden lg:flex items-center gap-8 text-xs font-mono-cyber border-l border-r border-slate-800 px-8 py-1">
+      <div className="hidden lg:flex items-center gap-6 text-xs font-mono-cyber border-l border-r border-slate-800 px-6 py-1">
+        {/* Credits Stat */}
+        <div className="flex items-center gap-2 bg-slate-900/60 border border-slate-850 px-2 py-0.5 rounded">
+          <Coins className="w-3.5 h-3.5 text-cyber-yellow animate-pulse" />
+          <div>
+            <span className="text-slate-500 block text-[8px] uppercase leading-none">CREDITS</span>
+            <span className="text-cyber-yellow font-black text-xs text-glow-yellow leading-tight">{credits} CR</span>
+          </div>
+        </div>
+        {/* Predictions Stat */}
+        <div className="flex items-center gap-2 bg-slate-900/60 border border-slate-850 px-2 py-0.5 rounded mr-2">
+          <Trophy className="w-3.5 h-3.5 text-emerald-400" />
+          <div>
+            <span className="text-slate-500 block text-[8px] uppercase leading-none">PREDICTIONS</span>
+            <span className="text-emerald-400 font-bold text-xs text-glow-blue leading-tight">{correctPredictions} WINS</span>
+          </div>
+        </div>
+        
         <div className="flex items-center gap-2">
           <Cpu className="w-4 h-4 text-cyber-blue" />
           <div>
